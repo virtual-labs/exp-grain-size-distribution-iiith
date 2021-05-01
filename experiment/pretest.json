@@ -1,18 +1,92 @@
 [
-{"question":"This is a Sample Question 1?",
+{"question":"1. Group index of soil ranges such that",
 "answers":{
-            "a":"answer1",
-            "b":"answer2",
-            "c":"answer3",
-            "d":"answer4"
+            "a":"0 < GI < 20",
+            "b":"0 <= GI <=20",
+            "c":"0 <= GI <=25",
+            "d":"0 < GI < ¡Þ"
+          },
+"correctAnswer":"b"},
+
+{"question":"2. The IS classification of soils is",
+"answers":{
+            "a":"Particles size classification",
+            "b":"Textural classification",
+            "c":"Highway research board classification",
+            "d":"Modified unified classification"
+          },
+"correctAnswer":"d"},
+
+{"question":"3. The biggest size of clay particles is",
+"answers":{
+            "a":"0.0002mm ",
+            "b":"0.002mm",
+            "c":" 0.02mm",
+            "d":"0.075mm"
+          },
+"correctAnswer":"b"},
+
+{"question":"4. The maximum size of fine grained soil is",
+"answers":{
+            "a":"0.002mm",
+            "b":"0.075mm",
+            "c":"0.75mm",
+            "d":"4.75mm"
+          },
+"correctAnswer":"b"},
+
+{"question":"5. Stokes law is valid only if the size of particle is",
+"answers":{
+            "a":"< 0.0002mm",
+            "b":" > 0.2mm",
+            "c":"Between 0.2mm and 0.0002mm ",
+            "d":"All of the above"
+          },
+"correctAnswer":"c"},
+
+{"question":"6. Which of the following is a measure of particle size range",
+"answers":{
+            "a":"Effective size ",
+            "b":"Uniformity coefficient",
+            "c":"Coefficient of curvature",
+            "d":"None of the above"
+          },
+"correctAnswer":"b"},
+
+{"question":"7. Uniformity coefficient of soil is",
+"answers":{
+            "a":"<1 ",
+            "b":"=1 ",
+            "c":">1",
+            "d":"<=1"
+          },
+"correctAnswer":"d"},
+
+{"question":"8. Sieve analysis is used when size of particle is",
+"answers":{
+            "a":"> 0.075mm",
+            "b":"< 0.075mm",
+            "c":"4.75mm",
+            "d":"0.01mm"
           },
 "correctAnswer":"a"},
-{"question":"This is a Sample Question 2?",
+
+{"question":"9. Sedimentation analysis is used when size of particle is",
 "answers":{
-            "a":"answer1",
-            "b":"answer2",
-            "c":"answer3",
-            "d":"answer4"
+            "a":"> 0.75mm",
+            "b":"< 0.075mm",
+            "c":"4.75mm",
+            "d":"0.01mm "
           },
-"correctAnswer":"c"} 
+"correctAnswer":"b"},
+
+{"question":"10. A flat grain size distribution curve shows a",
+"answers":{
+            "a":"Narrow range of grain size",
+            "b":"Wide range of grain size",
+            "c":"Uniform grain size",
+            "d":"Grain size from two representative fractions"
+          },
+"correctAnswer":"b"}
+
 ]
