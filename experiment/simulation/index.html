@@ -1,13 +1,70 @@
 <!DOCTYPE html>
 <html>
-<head>
-	<!-- Add CSS at the head of HTML file -->
-    <link rel="stylesheet" href="./css/main.css">
-</head>
-<body>
-		<!-- Your code goes here-->
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+		<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/virtual-labs/virtual-style@0.0.5-b/css/style.min.css">
+		<link rel="stylesheet" href="./css/main.css">
+	</head>
 
-	<!-- Add JS at the bottom of HTML file --> 
-        <script src="./js/main.js"></script>
-</body>
+	<body class="page">
+		<div class="columns is-centered is-flex">
+			<div class="column mt-2 is-4-desktop is-10-tablet is-10-mobile has-text-centered">
+				<div class="v-instruction-container">
+					<div class="v-instruction-title">Instructions</div>
+					<div id="procedure-message" class="v-instruction-text">
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="columns is-centered is-variable is-1-mobile is-flex is-flex-wrap-wrap workspace">
+			<div id="apparatus" class="column has-text-centered is-2-desktop is-5-tablet is-5-mobile apparatus">
+				<div class="v-datalist-container">
+					<div class="v-datalist-title">Apparatus Menu</div>
+					<a class="v-datalist-row v-bold" id="weight">Weighing Machine</a>
+					<a class="v-datalist-row v-bold" id="container">Container</a>
+					<a class="v-datalist-row v-bold" id="soil">Soil Sample</a>
+					<div id="inputForm" class="input-form">
+						<div class="slidecontainer">
+							<p>Soil Mass(g): <span id="demo_soilMass"></span></p>
+							<input type="range" min="50" max="500" value="100" class="v-slider-full" id="soilMass" />
+						</div>
+
+						<button id="submit" class="v-button add">Add</button>
+					</div>
+
+					<a class="v-datalist-row v-bold" id="sieves">Sieves</a>
+				</div>
+			</div>
+
+			<div id="observations" class="column has-text-centered is-2-desktop is-5-tablet is-5-mobile observations">
+				<div class="v-datalist-container">
+					<div class="v-datalist-title">Observations</div>
+					<div class="v-datalist-row v-bold" id="output1"></div>
+					<div class="v-datalist-row v-bold" id="output2"></div>
+					<div class="v-datalist-row">
+						<div class="v-table-wrap">
+							<table id="table" class="table is-bordered is-fullwidth">
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="column has-text-centered is-6-desktop is-10-tablet is-10-mobile simulation">
+				<canvas id="main" class="v-canvas-container"></canvas>
+			</div>
+		</div>
+
+		<div class="columns is-mobile is-centered is-flex">
+			<div class="column has-text-centered">
+				<button id="restart" class="v-button">Restart</button>
+			</div>
+		</div>
+
+		<script src="https://unpkg.com/mathjs@9.2.0/lib/browser/math.js"></script>
+		<script src="./js/main.js"></script>
+	</body>
 </html>
