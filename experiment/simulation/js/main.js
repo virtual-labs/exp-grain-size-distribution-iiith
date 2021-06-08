@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		{
 			if(step === 2)
 			{
-				document.getElementById("output1").innerHTML = "Mass of container = " + String(10) + "g";
+				document.getElementById("output1").innerHTML = "Mass of sieves = " + String(10) + "g";
 			}
 
 			else if(step === 4)
@@ -71,11 +71,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		obj.pos[1] += translate[1];
 	};
 
-	class container {
-		constructor(height, width, radius, x, y) {
+	class sieve {
+		constructor(height, width, x, y) {
 			this.height = height;
 			this.width = width;
-			this.radius = radius;
 			this.pos = [x, y];
 		};
 
@@ -93,18 +92,18 @@ document.addEventListener('DOMContentLoaded', function() {
 				this.radius = this.height / 2;
 			}
 
+			const e1 = [this.pos[0] + this.width, this.pos[1]], e2 = [...this.pos];
+			const gradX = (e1[0] - e2[0]) / -4, gradY = 5;
+
 			ctx.beginPath();
-			ctx.moveTo(this.pos[0] + this.radius, this.pos[1]);
-			ctx.arcTo(this.pos[0] + this.width, this.pos[1], this.pos[0] + this.width, this.pos[1] + this.height, this.radius);
-			ctx.arcTo(this.pos[0] + this.width, this.pos[1] + this.height, this.pos[0], this.pos[1] + this.height, this.radius);
-			ctx.arcTo(this.pos[0], this.pos[1] + this.height, this.pos[0], this.pos[1], this.radius);
-			ctx.arcTo(this.pos[0], this.pos[1], this.pos[0] + this.width, this.pos[1], this.radius);
+			ctx.moveTo(this.pos[0], this.pos[1]);
+			ctx.lineTo(this.pos[0] + this.width, this.pos[1]);
+			ctx.lineTo(this.pos[0] + this.width, this.pos[1] + this.height);
+			curvedArea(ctx, [this.pos[0] + this.width, this.pos[1] + this.height], gradX, gradY);
+			ctx.lineTo(this.pos[0], this.pos[1]);
 			ctx.closePath();
 			ctx.fill();
 			ctx.stroke();
-
-			const e1 = [this.pos[0] + this.width, this.pos[1]], e2 = [...this.pos];
-			const gradX = (e1[0] - e2[0]) / -4, gradY = 10;
 
 			ctx.beginPath();
 			ctx.moveTo(e2[0], e2[1]);
@@ -146,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		};
 	};
 
-	class sieves {
+	class shaker {
 		constructor(height, width, x, y) {
 			this.height = height;
 			this.width = width;
@@ -195,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 			ctx.font = "30px Arial";
 			ctx.fillStyle = "black";
-			ctx.fillText("Sieves", this.pos[0] + margin[0] * this.width + 10, this.pos[1] + (margin[1] + divide) * this.height + 25);
+			ctx.fillText("Shaker", this.pos[0] + margin[0] * this.width + 10, this.pos[1] + (margin[1] + divide) * this.height + 25);
 
 			// Small button at bottom
 			const buttonGapX = 0.10;
@@ -211,18 +210,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function init()
 	{
-		document.getElementById("output1").innerHTML = "Mass of container = ___ g";
+		document.getElementById("output1").innerHTML = "Mass of sieves = ___ g";
 		document.getElementById("output2").innerHTML = "Mass of wet soil = ___ g";
+
+		const sieves = [], bottom = 320;
+		for(let i = 0; i < 6; ++i)
+		{
+			sieves.push(new sieve(40, 90, 600, bottom - 40 * i));
+		}
 
 		objs = {
 			"weight": new weight(270, 240, 90, 160),
-			"sieves": new sieves(330, 240, 510, 30),
-			"container": new container(120, 150, 8, 600, 240),
+			"shaker": new shaker(330, 240, 510, 30),
+			"sieves": sieves,
 			"soil": new soil(90, 150, 600, 270),
 		};
 		keys = [];
 
-		enabled = [["weight"], ["weight", "container"], ["weight", "container"], ["weight", "container", "soil"], ["weight", "container", "soil"], ["container", "soil", "sieves"], ["container", "soil", "sieves"], ["container", "soil", "sieves"], ["weight", "container", "soil"], []];
+		enabled = [["weight"], ["weight", "sieves"], ["weight", "sieves"], ["weight", "sieves", "soil"], ["weight", "sieves", "soil"], ["sieves", "soil", "shaker"], ["sieves", "soil", "shaker"], ["sieves", "soil", "shaker"], ["weight", "sieves", "soil"], []];
 		step = 0;
 		translate = [0, 0];
 		lim = [-1, -1];
@@ -279,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		keys.forEach(function(val, ind) {
 			if(canvasPos[0] >= objs[val].pos[0] - errMargin && canvasPos[0] <= objs[val].pos[0] + objs[val].width + errMargin && canvasPos[1] >= objs[val].pos[1] - errMargin && canvasPos[1] <= objs[val].pos[1] + objs[val].height + errMargin)
 			{
-				if(step === 2 && val === "container")
+				if(step === 2 && val === "sieves")
 				{
 					hover = true;
 					translate[0] = -5;
@@ -297,7 +302,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					lim[1] = 140;
 				}
 
-				else if(step === 6 && val === "container")
+				else if(step === 6 && val === "sieves")
 				{
 					hover = true;
 					translate[0] = 5;
@@ -306,14 +311,14 @@ document.addEventListener('DOMContentLoaded', function() {
 					lim[1] = 150;
 				}
 
-				else if(step === 7 && val === "sieves" && canvasPos[0] >= objs[val].pos[0] - errMargin && canvasPos[0] <= objs[val].pos[0] + objs[val].width + errMargin && canvasPos[1] >= objs[val].pos[1] + objs[val].height * 0.8 - errMargin && canvasPos[1] <= objs[val].pos[1] + objs[val].height + errMargin)
+				else if(step === 7 && val === "shaker" && canvasPos[0] >= objs[val].pos[0] - errMargin && canvasPos[0] <= objs[val].pos[0] + objs[val].width + errMargin && canvasPos[1] >= objs[val].pos[1] + objs[val].height * 0.8 - errMargin && canvasPos[1] <= objs[val].pos[1] + objs[val].height + errMargin)
 				{
 					hover = true;
 					translate[1] = 1;
 					lim[1] = 210;
 				}
 
-				else if(step === 8 && val === "container")
+				else if(step === 8 && val === "sieves")
 				{
 					hover = true;
 					translate[0] = -5;
@@ -364,14 +369,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	const fill = "#A9A9A9", border = "black", lineWidth = 1.5, fps = 150;
 	const msgs = [
 		"Click on 'Weighing Machine' in the apparatus menu to add a weighing machine to the workspace.", 
-		"Click on 'Container' in the apparatus menu to add a container to the workspace.",
-		"Click on the container to move it to the weighing machine and weigh it.",
+		"Click on 'Sieves' in the apparatus menu to add a sieves to the workspace.",
+		"Click on the sieves to move it to the weighing machine and weigh it.",
 		"Click on 'Soil Sample' in the apparatus menu, set appropriate input values (Soil Mass) and click 'Add' to add a soil sample to the workspace.",
-		"Click on the soil sample to add it to the container and weigh it.",
-		"Click on 'Sieves' in the apparatus menu to add an sieves to the workspace.", 
-		"Click on the container to move it to the sieves.",
-		"Click on the sieves red portion to start the sieves and heat the soil.",
-		"Click on the container with dry soil to weigh it.",
+		"Click on the soil sample to add it to the sieves and weigh it.",
+		"Click on 'Shaker' in the apparatus menu to add an shaker to the workspace.", 
+		"Click on the sieves to move it to the shaker.",
+		"Click on the shaker red portion to start the shaker and heat the soil.",
+		"Click on the sieves with dry soil to weigh it.",
 		"Click the restart button to perform the experiment again.",
 	];
 
@@ -459,7 +464,18 @@ document.addEventListener('DOMContentLoaded', function() {
 				{
 					ctr += 1;
 				}
-				objs[name].draw(ctx);
+
+				if(Array.isArray(objs[name]))
+				{
+					objs[name].forEach(function(elem, i) {
+						elem.draw(ctx);
+					});
+				}
+
+				else
+				{
+					objs[name].draw(ctx);
+				}
 			}
 		});
 
@@ -471,7 +487,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		if(translate[0] != 0 || translate[1] != 0)
 		{
 			let temp = step;
-			const soilMoves = [4, 6, 7, 8], containerMoves = [2, 6, 8];
+			const soilMoves = [4, 6, 7, 8], sievesMoves = [2, 6, 8];
 
 			if(soilMoves.includes(step))
 			{
@@ -487,10 +503,10 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 			}
 
-			if(containerMoves.includes(step))
+			if(sievesMoves.includes(step))
 			{
-				updatePos(objs['container'], translate);
-				temp = limCheck(objs['container'], translate, lim, step);
+				updatePos(objs['sieves'], translate);
+				temp = limCheck(objs['sieves'], translate, lim, step);
 			}
 
 			step = temp;
