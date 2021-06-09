@@ -146,38 +146,69 @@ document.addEventListener('DOMContentLoaded', function() {
 	};
 
 	class shaker {
-		constructor(height, width, x, y) {
+		constructor(height, width, angle, x, y) {
 			this.height = height;
 			this.width = width;
+			this.angle = angle;
 			this.pos = [x, y];
 		};
 
+		zigzag(ctx, startX, startY) {
+			const zigzagSpacing = 10, zigzagHeight = 20;
+			ctx.lineWidth = 5;
+			ctx.strokeStyle = "black";
+			ctx.beginPath();
+			ctx.moveTo(startX, startY);
+
+			for (var n = 0; n < 5; n++) {
+				const y = startY + ((n + 1) * zigzagSpacing);
+				var x = startX;
+
+				if (n % 2 == 0) { // if n is even...
+					x += zigzagHeight;
+				}
+				ctx.lineTo(x, y);
+			}
+
+			ctx.stroke();
+		}
+
 		draw(ctx) {
 			// Outline
-			ctx.fillStyle = "white";
+			const rodWidth = 0.05, rodGap = 0.1, segmentHeight = 0.1, gap = 0.1, vibePart = 0.8;
+			ctx.translate(this.pos[0] + this.width / 2, this.pos[1] + this.height * vibePart / 2);
+			ctx.rotate(this.angle * Math.PI / 180);
+
 			ctx.lineWidth = 3;
+
+			// Vertical rods
+			ctx.fillStyle = "#A9A9A9";
 			ctx.beginPath();
-			ctx.rect(this.pos[0], this.pos[1], this.width, this.height);
+			ctx.rect(-this.width * (1 - rodGap) / 2, -this.height * vibePart / 2, this.width * rodWidth, this.height * vibePart);
+			ctx.rect(this.width * (1 - rodGap) / 2, -this.height * vibePart / 2, -this.width * rodWidth, this.height * vibePart);
 			ctx.closePath();
 			ctx.fill();
 			ctx.stroke();
 
-			// Lower division(red part)
-			const divide = 0.80;
-			ctx.fillStyle = "red";
+			// Horizontal rods
+			ctx.fillStyle = "#72A0C1";
+			ctx.beginPath();
+			ctx.rect(-this.width / 2, -this.height * (1 - gap) * vibePart / 2, this.width, segmentHeight * this.height);
+			ctx.rect(-this.width / 2, this.height * (1 - gap) * vibePart / 2, this.width, -segmentHeight * this.height);
+			ctx.closePath();
+			ctx.fill();
+			ctx.stroke();
+
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+			this.zigzag(ctx, this.pos[0] + rodGap + rodWidth + this.width * (1 - 2 * rodGap) / 4, this.pos[1] + this.height * vibePart * (1 - gap / 2));
+			this.zigzag(ctx, this.pos[0] + rodGap + rodWidth + 3 * this.width * (1 - 2 * rodGap) / 4 + 20, this.pos[1] + this.height * vibePart * (1 - gap / 2));
+
+			const divide = 0.85;
+			ctx.fillStyle = "#72A0C1";
 			ctx.lineWidth = lineWidth;
 			ctx.beginPath();
 			ctx.rect(this.pos[0], this.pos[1] + divide * this.height, this.width, (1 - divide) * this.height);
-			ctx.closePath();
-			ctx.fill();
-			ctx.stroke();
-
-			// Main segment(pink part)
-			const gap = 0.05;
-			ctx.fillStyle = "pink";
-			ctx.lineWidth = lineWidth;
-			ctx.beginPath();
-			ctx.rect(this.pos[0] + gap * this.width, this.pos[1] + gap * this.height, (1 - 2 * gap) * this.width, (divide - gap) * this.height);
 			ctx.closePath();
 			ctx.fill();
 			ctx.stroke();
@@ -192,9 +223,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			ctx.fill();
 			ctx.stroke();
 
-			ctx.font = "30px Arial";
+			ctx.font = "20px Arial";
 			ctx.fillStyle = "black";
-			ctx.fillText("Shaker", this.pos[0] + margin[0] * this.width + 10, this.pos[1] + (margin[1] + divide) * this.height + 25);
+			ctx.fillText("Shaker", this.pos[0] + margin[0] * this.width + 5, this.pos[1] + (margin[1] + divide) * this.height + 15);
 
 			// Small button at bottom
 			const buttonGapX = 0.10;
@@ -213,17 +244,17 @@ document.addEventListener('DOMContentLoaded', function() {
 		document.getElementById("output1").innerHTML = "Mass of sieves = ___ g";
 		document.getElementById("output2").innerHTML = "Mass of wet soil = ___ g";
 
-		const sieves = [], bottom = 320;
+		const sieves = [], bottom = 220;
 		for(let i = 0; i < 6; ++i)
 		{
-			sieves.push(new sieve(40, 90, 600, bottom - 40 * i));
+			sieves.push(new sieve(25, 90, 555, bottom - 25 * i));
 		}
 
 		objs = {
-			"weight": new weight(270, 240, 90, 160),
-			"shaker": new shaker(330, 240, 510, 30),
+			"weight": new weight(270, 240, 90, 180),
+			"shaker": new shaker(360, 180, 0, 510, 20),
 			"sieves": sieves,
-			"soil": new soil(90, 150, 600, 270),
+			"soil": new soil(60, 90, 600, 270),
 		};
 		keys = [];
 
