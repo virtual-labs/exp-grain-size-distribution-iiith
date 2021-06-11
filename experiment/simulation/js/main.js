@@ -115,6 +115,66 @@ document.addEventListener('DOMContentLoaded', function() {
 		};
 	};
 
+	class sieves {
+		constructor(height, width, count, x, y) {
+			this.height = height;
+			this.width = width;
+			this.count = count;
+			this.pos = [x, y];
+
+			this.sieveArr = [];
+			for (var i = 0; i < this.count; ++i)
+			{
+				this.sieveArr.push(new sieve(this.height / this.count, this.width, this.pos[0], this.pos[1] + (this.count - i - 1) * this.height / this.count));
+			}
+		};
+
+		draw(ctx) {
+			this.sieveArr.forEach(function(elem, ix) {
+				elem.draw(ctx);
+			});
+		};
+
+		move(translate) {
+			this.sieveArr.forEach(function(elem, ix) {
+				updatePos(elem, translate);
+			});
+		};
+
+		weigh(idx, translate, lim, step) {
+			if(lim[1] > this.sieveArr[idx].pos[1] && translate[1] < 0)
+			{
+				translate[1] *= -1;
+			}
+
+			else if(lim[1] < this.sieveArr[idx].pos[1] && translate[1] > 0)
+			{
+				translate[1] *= -1;
+			}
+
+			updatePos(this.sieveArr[idx], translate);
+			const temp = limCheck(this.sieveArr[idx], translate, lim, step);
+
+			if(temp != step)
+			{
+				if(lim[0] === this.pos[0])
+				{
+					idx += 1;
+				}
+
+				else
+				{
+					translate[0] = 5;
+					translate[1] = 5;
+					lim[0] = this.pos[0];
+					lim[1] = this.pos[1] + (this.count - idx - 1) * this.height / this.count;
+				}
+			}
+
+			return idx;
+		};
+	};
+
 	class soil {
 			constructor(height, width, x, y) {
 			this.height = height;
@@ -244,16 +304,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		document.getElementById("output1").innerHTML = "Mass of sieves = ___ g";
 		document.getElementById("output2").innerHTML = "Mass of wet soil = ___ g";
 
-		const sieves = [], bottom = 220;
-		for(let i = 0; i < 6; ++i)
-		{
-			sieves.push(new sieve(25, 90, 555, bottom - 25 * i));
-		}
-
+		idx = 0;
 		objs = {
 			"weight": new weight(270, 240, 90, 180),
 			"shaker": new shaker(360, 180, 0, 510, 20),
-			"sieves": sieves,
+			"sieves": new sieves(150, 90, 6, 555, 210),
 			"soil": new soil(60, 90, 600, 270),
 		};
 		keys = [];
@@ -320,8 +375,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					hover = true;
 					translate[0] = -5;
 					translate[1] = -5;
-					lim[0] = 135;
-					lim[1] = 110;
+					lim[0] = 165;
+					lim[1] = 225;
 				}
 
 				else if(step === 4 && val === "soil")
@@ -411,7 +466,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		"Click the restart button to perform the experiment again.",
 	];
 
-	let step, translate, lim, objs, keys, enabled, small;
+	let step, translate, lim, objs, keys, enabled, small, idx;
 	init();
 
 	const tableData = [
@@ -496,17 +551,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					ctr += 1;
 				}
 
-				if(Array.isArray(objs[name]))
-				{
-					objs[name].forEach(function(elem, i) {
-						elem.draw(ctx);
-					});
-				}
-
-				else
-				{
-					objs[name].draw(ctx);
-				}
+				objs[name].draw(ctx);
 			}
 		});
 
@@ -536,8 +581,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
 			if(sievesMoves.includes(step))
 			{
-				updatePos(objs['sieves'], translate);
-				temp = limCheck(objs['sieves'], translate, lim, step);
+				//updatePos(objs['sieves'], translate);
+				//objs['sieves'].move(translate);
+				//temp = limCheck(objs['sieves'], translate, lim, step);
+				idx = objs['sieves'].weigh(idx, translate, lim, step);
+				if(idx >= objs['sieves'].count)
+				{
+					temp += 1;
+				}
 			}
 
 			step = temp;
