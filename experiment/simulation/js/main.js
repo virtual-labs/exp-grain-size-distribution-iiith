@@ -142,16 +142,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		};
 
 		weigh(idx, translate, lim, step) {
-			if(lim[1] > this.sieveArr[idx].pos[1] && translate[1] < 0)
-			{
-				translate[1] *= -1;
-			}
-
-			else if(lim[1] < this.sieveArr[idx].pos[1] && translate[1] > 0)
-			{
-				translate[1] *= -1;
-			}
-
 			updatePos(this.sieveArr[idx], translate);
 			const temp = limCheck(this.sieveArr[idx], translate, lim, step);
 
@@ -160,6 +150,10 @@ document.addEventListener('DOMContentLoaded', function() {
 				if(lim[0] === this.pos[0])
 				{
 					idx += 1;
+					translate[0] = -5;
+					translate[1] = -5;
+					lim[0] = 155;
+					lim[1] = 225;
 				}
 
 				else
@@ -168,6 +162,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					translate[1] = 5;
 					lim[0] = this.pos[0];
 					lim[1] = this.pos[1] + (this.count - idx - 1) * this.height / this.count;
+					const delay = 1, waitTill = new Date(new Date().getTime() + delay * 1000);
+					while(waitTill > new Date()){};
 				}
 			}
 
@@ -307,13 +303,13 @@ document.addEventListener('DOMContentLoaded', function() {
 		idx = 0;
 		objs = {
 			"weight": new weight(270, 240, 90, 180),
-			"shaker": new shaker(360, 180, 0, 510, 20),
-			"sieves": new sieves(150, 90, 6, 555, 210),
-			"soil": new soil(60, 90, 600, 270),
+			"shaker": new shaker(360, 180, 0, 90, 20),
+			"sieves": new sieves(150, 90, 6, 555, 230),
+			"soil": new soil(60, 90, 660, 320),
 		};
 		keys = [];
 
-		enabled = [["weight"], ["weight", "sieves"], ["weight", "sieves"], ["weight", "sieves", "soil"], ["weight", "sieves", "soil"], ["sieves", "soil", "shaker"], ["sieves", "soil", "shaker"], ["sieves", "soil", "shaker"], ["weight", "sieves", "soil"], []];
+		enabled = [["weight"], ["weight", "sieves"], ["weight", "sieves"], ["sieves", "shaker"], ["sieves", "shaker"], ["sieves", "shaker", "soil"], ["sieves", "shaker", "soil"], ["weight", "sieves", "shaker", "soil"], ["weight", "sieves", "shaker", "soil"], []];
 		step = 0;
 		translate = [0, 0];
 		lim = [-1, -1];
@@ -375,26 +371,26 @@ document.addEventListener('DOMContentLoaded', function() {
 					hover = true;
 					translate[0] = -5;
 					translate[1] = -5;
-					lim[0] = 165;
+					lim[0] = 155;
 					lim[1] = 225;
 				}
 
-				else if(step === 4 && val === "soil")
+				else if(step === 4 && val === "sieves")
 				{
 					hover = true;
 					translate[0] = -5;
 					translate[1] = -5;
 					lim[0] = 135;
-					lim[1] = 140;
+					lim[1] = 95;
 				}
 
-				else if(step === 6 && val === "sieves")
+				else if(step === 6 && val === "soil")
 				{
 					hover = true;
-					translate[0] = 5;
-					translate[1] = 5;
-					lim[0] = 560;
-					lim[1] = 150;
+					translate[0] = -5;
+					translate[1] = -5;
+					lim[0] = 100;
+					lim[1] = 75;
 				}
 
 				else if(step === 7 && val === "shaker" && canvasPos[0] >= objs[val].pos[0] - errMargin && canvasPos[0] <= objs[val].pos[0] + objs[val].width + errMargin && canvasPos[1] >= objs[val].pos[1] + objs[val].height * 0.8 - errMargin && canvasPos[1] <= objs[val].pos[1] + objs[val].height + errMargin)
@@ -455,12 +451,12 @@ document.addEventListener('DOMContentLoaded', function() {
 	const fill = "#A9A9A9", border = "black", lineWidth = 1.5, fps = 150;
 	const msgs = [
 		"Click on 'Weighing Machine' in the apparatus menu to add a weighing machine to the workspace.", 
-		"Click on 'Sieves' in the apparatus menu to add a sieves to the workspace.",
-		"Click on the sieves to move it to the weighing machine and weigh it.",
+		"Click on 'Sieves' in the apparatus menu to add a set of sieves to the workspace.",
+		"Click on the sieve set to weigh each sieve separately.",
+		"Click on 'Shaker' in the apparatus menu to add a shaker to the workspace.", 
+		"Click on the sieve set to move it to the shaker.",
 		"Click on 'Soil Sample' in the apparatus menu, set appropriate input values (Soil Mass) and click 'Add' to add a soil sample to the workspace.",
 		"Click on the soil sample to add it to the sieves and weigh it.",
-		"Click on 'Shaker' in the apparatus menu to add an shaker to the workspace.", 
-		"Click on the sieves to move it to the shaker.",
 		"Click on the shaker red portion to start the shaker and heat the soil.",
 		"Click on the sieves with dry soil to weigh it.",
 		"Click the restart button to perform the experiment again.",
@@ -484,6 +480,13 @@ document.addEventListener('DOMContentLoaded', function() {
 				enabled[step].pop();
 				document.getElementById("inputForm").style.display = 'block';
 				return;
+			}
+
+			else if(elem === "shaker")
+			{
+				keys = keys.filter(function(val, index) {
+					return val != "weight";
+				});
 			}
 
 			keys.push(elem);
@@ -563,7 +566,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		if(translate[0] != 0 || translate[1] != 0)
 		{
 			let temp = step;
-			const soilMoves = [4, 6, 7, 8], sievesMoves = [2, 6, 8];
+			const soilMoves = [6], sieveSetMoves = [4], sievesMoves = [2];
 
 			if(soilMoves.includes(step))
 			{
@@ -579,14 +582,20 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 			}
 
-			if(sievesMoves.includes(step))
+			if(sieveSetMoves.includes(step))
 			{
-				//updatePos(objs['sieves'], translate);
-				//objs['sieves'].move(translate);
-				//temp = limCheck(objs['sieves'], translate, lim, step);
+				updatePos(objs['sieves'], translate);
+				objs['sieves'].move(translate);
+				temp = limCheck(objs['sieves'], translate, lim, step);
+			}
+
+			else if(sievesMoves.includes(step))
+			{
 				idx = objs['sieves'].weigh(idx, translate, lim, step);
 				if(idx >= objs['sieves'].count)
 				{
+					translate[0] = 0;
+					translate[1] = 0;
 					temp += 1;
 				}
 			}
