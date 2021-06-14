@@ -419,13 +419,11 @@ document.addEventListener('DOMContentLoaded', function() {
 					rotLim = 5;
 				}
 
-				else if(step === 10 && val === "sieves")
+				else if(step === 9 && val === "sieves")
 				{
 					hover = true;
 					translate[0] = -5;
-					translate[1] = -5;
-					lim[0] = 135;
-					lim[1] = 110;
+					lim[0] = 165;
 				}
 			}
 		});
