@@ -142,12 +142,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		};
 
 		weigh(idx, translate, lim, step) {
-			if(lim[1] < this.sieveArr[idx].pos[1] && translate[1] > 0)
-			{
-				translate[1] *= -1;
-			}
-
-			else if(lim[1] > this.sieveArr[idx].pos[1] && translate[1] < 0)
+			if(lim[1] > this.sieveArr[idx].pos[1] && translate[1] < 0)
 			{
 				translate[1] *= -1;
 			}
@@ -157,24 +152,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 			if(temp != step)
 			{
-				if(lim[0] === this.pos[0])
-				{
-					idx += 1;
-					translate[0] = -5;
-					translate[1] = -5;
-					lim[0] = 155;
-					lim[1] = 220;
-				}
-
-				else
-				{
-					translate[0] = 5;
-					translate[1] = 5;
-					lim[0] = this.pos[0];
-					lim[1] = this.pos[1] + (this.count - idx - 1) * this.height / this.count + idx * 10;
-					const delay = 1, waitTill = new Date(new Date().getTime() + delay * 1000);
-					while(waitTill > new Date()){};
-				}
+				idx += 1;
+				translate[0] = -5;
+				translate[1] = -5;
+				lim[1] = lim[1] - this.height / this.count + 10;
 			}
 
 			return idx;
@@ -201,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	};
 
 	class soil {
-			constructor(height, width, x, y) {
+		constructor(height, width, x, y) {
 			this.height = height;
 			this.width = width;
 			this.pos = [x, y];
@@ -246,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		};
 
 		zigzag(ctx, startX, startY) {
-			const zigzagSpacing = 10, zigzagHeight = 20;
+			const zigzagSpacing = 10, zigzagHeight = 30;
 			ctx.lineWidth = 5;
 			ctx.strokeStyle = "black";
 			ctx.beginPath();
@@ -268,6 +249,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		draw(ctx) {
 			// Outline
 			const rodWidth = 0.05, rodGap = 0.1, segmentHeight = 0.1, gap = 0.1, vibePart = 0.8;
+
+			this.zigzag(ctx, this.pos[0] + rodGap + rodWidth + this.width * (1 - 2 * rodGap) / 4, this.pos[1] + this.height * vibePart * (1 - gap / 2) - 10);
+			this.zigzag(ctx, this.pos[0] + rodGap + rodWidth + 3 * this.width * (1 - 2 * rodGap) / 4 + 20, this.pos[1] + this.height * vibePart * (1 - gap / 2) - 10);
+
 			ctx.translate(this.pos[0] + this.width / 2, this.pos[1] + this.height * vibePart / 2);
 			ctx.rotate(this.angle * Math.PI / 180);
 
@@ -292,9 +277,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			ctx.stroke();
 
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
-
-			this.zigzag(ctx, this.pos[0] + rodGap + rodWidth + this.width * (1 - 2 * rodGap) / 4, this.pos[1] + this.height * vibePart * (1 - gap / 2));
-			this.zigzag(ctx, this.pos[0] + rodGap + rodWidth + 3 * this.width * (1 - 2 * rodGap) / 4 + 20, this.pos[1] + this.height * vibePart * (1 - gap / 2));
 
 			const divide = 0.85;
 			ctx.fillStyle = "#72A0C1";
@@ -339,14 +321,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		idx = 0;
 		objs = {
 			"weight": new weight(270, 240, 90, 180),
-			"shaker": new shaker(360, 180, 0, 90, 20),
+			"shaker": new shaker(360, 180, 0, 570, 20),
 			"sieves": new sieves(210, 90, 6, 660, 170),
-			"lid": new lid(35, 90, 135, 70),
+			"lid": new lid(35, 90, 615, 70),
 			"soil": new soil(60, 90, 660, 320),
 		};
 		keys = [];
 
-		enabled = [["weight"], ["weight", "sieves"], ["weight", "sieves"], ["sieves", "shaker"], ["sieves", "shaker"], ["sieves", "shaker", "soil"], ["sieves", "shaker", "soil"], ["lid", "sieves", "shaker", "soil"], ["lid", "sieves", "shaker", "soil"], ["weight", "sieves", "soil"], ["weight", "sieves", "soil"], []];
+		enabled = [["weight"], ["weight", "sieves"], ["weight", "sieves"], ["weight", "sieves", "soil"], ["weight", "sieves", "soil"], ["sieves", "shaker", "soil"], ["sieves", "shaker", "soil"], ["lid", "sieves", "shaker", "soil"], ["lid", "sieves", "shaker", "soil"], ["weight", "sieves", "soil"], ["weight", "sieves", "soil"], []];
 		step = 0;
 		translate = [0, 0];
 		lim = [-1, -1];
@@ -410,36 +392,34 @@ document.addEventListener('DOMContentLoaded', function() {
 					hover = true;
 					translate[0] = -5;
 					translate[1] = -5;
-					lim[0] = 155;
+					lim[0] = 165;
 					lim[1] = 220;
 				}
 
-				else if(step === 4 && val === "sieves")
+				else if(step === 4 && val === "soil")
 				{
 					hover = true;
 					translate[0] = -5;
 					translate[1] = -5;
-					lim[0] = 135;
-					lim[1] = 45;
-				}
-
-				else if(step === 6 && val === "soil")
-				{
-					hover = true;
-					translate[0] = -5;
-					translate[1] = -5;
-					lim[0] = 135;
+					lim[0] = 165;
 					lim[1] = 105;
 				}
 
-				else if(step === 7 && val === "shaker" && canvasPos[1] >= objs[val].pos[1] + objs[val].height * 0.85 - errMargin && canvasPos[1] <= objs[val].pos[1] + objs[val].height + errMargin)
+				else if(step === 6 && val === "sieves")
 				{
 					hover = true;
-					rotation = 5;
-					rotLim = 30;
+					translate[0] = 5;
+					lim[0] = 615;
 				}
 
-				else if(step === 8 && val === "sieves")
+				else if(step === 8 && val === "shaker" && canvasPos[1] >= objs[val].pos[1] + objs[val].height * 0.85 - errMargin && canvasPos[1] <= objs[val].pos[1] + objs[val].height + errMargin)
+				{
+					hover = true;
+					rotation = 1;
+					rotLim = 5;
+				}
+
+				else if(step === 10 && val === "sieves")
 				{
 					hover = true;
 					translate[0] = -5;
@@ -457,6 +437,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			translate[1] = 0;
 			lim[0] = 0;
 			lim[1] = 0;
+			rotation = 0;
+			rotLim = -1;
 		}
 	};
 
@@ -491,11 +473,11 @@ document.addEventListener('DOMContentLoaded', function() {
 	const msgs = [
 		"Click on 'Weighing Machine' in the apparatus menu to add a weighing machine to the workspace.", 
 		"Click on 'Sieves' in the apparatus menu to add a set of sieves to the workspace.",
-		"Click on the sieve set to weigh each sieve separately.",
-		"Click on 'Shaker' in the apparatus menu to add a shaker to the workspace.", 
-		"Click on the sieve set to move it to the shaker.",
+		"Click on the sieve set to weigh each sieve.",
 		"Click on 'Soil Sample' in the apparatus menu, set appropriate input values (Soil Mass) and click 'Add' to add a soil sample to the workspace.",
 		"Click on the soil sample to add it to the sieves and weigh it.",
+		"Click on 'Shaker' in the apparatus menu to add a shaker to the workspace.", 
+		"Click on the sieve set to move it to the shaker.",
 		"Click on 'Lid' in the apparatus menu to add a lid to the sieve set in the shaker.",
 		"Click on the shaker blue portion at the bottom to start the shaker and properly sieve the soil.",
 		"Click on 'Weighing Machine' in the apparatus menu to add a weighing machine to the workspace.", 
@@ -521,13 +503,6 @@ document.addEventListener('DOMContentLoaded', function() {
 				enabled[step].pop();
 				document.getElementById("inputForm").style.display = 'block';
 				return;
-			}
-
-			else if(elem === "shaker")
-			{
-				keys = keys.filter(function(val, index) {
-					return val != "weight";
-				});
 			}
 
 			keys.push(elem);
@@ -605,7 +580,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 
 		objs['shaker'].angle += rotation;
-		if(objs['angle'] >= rotLim)
+		if(objs['shaker'].angle >= rotLim)
 		{
 			rotation = 0;
 		}
@@ -613,17 +588,16 @@ document.addEventListener('DOMContentLoaded', function() {
 		if(translate[0] != 0 || translate[1] != 0)
 		{
 			let temp = step;
-			const soilMoves = [6], sieveSetMoves = [4], sievesMoves = [2];
+			const soilMoves = [4, 6], sieveSetMoves = [6], sievesMoves = [2];
 
 			if(soilMoves.includes(step))
 			{
 				updatePos(objs['soil'], translate);
-				if(step === 6)
+				if(step === 4)
 				{
 					objs['soil'].shrink(5);
+					temp = limCheck(objs['soil'], translate, lim, step);
 				}
-
-				temp = limCheck(objs['soil'], translate, lim, step);
 			}
 
 			if(sieveSetMoves.includes(step))
@@ -638,6 +612,8 @@ document.addEventListener('DOMContentLoaded', function() {
 				idx = objs['sieves'].weigh(idx, translate, lim, step);
 				if(idx >= objs['sieves'].count)
 				{
+					objs['sieves'].pos[0] = objs['sieves'].sieveArr[idx - 1].pos[0];
+					objs['sieves'].pos[1] = objs['sieves'].sieveArr[idx - 1].pos[1];
 					translate[0] = 0;
 					translate[1] = 0;
 					temp += 1;
