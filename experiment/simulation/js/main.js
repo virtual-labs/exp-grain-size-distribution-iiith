@@ -7,6 +7,23 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	restartButton.addEventListener('click', function() { restart(); });
 
+	function rotate(objs, rotation, rotLim)
+	{
+		if(!rotation)
+		{
+			return 0;
+		}
+
+		objs['sieves'].angle += rotation;
+		objs['shaker'].angle += rotation;
+		if(objs['shaker'].angle >= rotLim)
+		{
+			rotation = 0;
+		}
+
+		return rotation;
+	};
+
 	function randomNumber(min, max) {
 		return (Math.random() * (max - min + 1) + min).toFixed(2);
 	};
@@ -79,26 +96,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		};
 
 		draw(ctx) {
-			if(this.width < 2 * this.radius) 
-			{
-				this.radius = this.width / 2;
-			}
-
-			if(this.height < 2 * this.radius) 
-			{
-				this.radius = this.height / 2;
-			}
-
 			const e1 = [this.pos[0] + this.width, this.pos[1]], e2 = [...this.pos];
 			const gradX = (e1[0] - e2[0]) / -4, gradY = 5;
 
 			ctx.beginPath();
-			ctx.moveTo(this.pos[0], this.pos[1]);
-			ctx.lineTo(this.pos[0] + this.width, this.pos[1]);
-			ctx.lineTo(this.pos[0] + this.width, this.pos[1] + this.height);
-			//curvedArea(ctx, [this.pos[0] + this.width, this.pos[1] + this.height], gradX, gradY);
-			ctx.lineTo(this.pos[0], this.pos[1] + this.height);
-			ctx.lineTo(this.pos[0], this.pos[1]);
+			ctx.rect(this.pos[0], this.pos[1], this.width, this.height);
 			ctx.closePath();
 			ctx.fill();
 			ctx.stroke();
@@ -114,9 +116,10 @@ document.addEventListener('DOMContentLoaded', function() {
 	};
 
 	class sieves {
-		constructor(height, width, count, x, y) {
+		constructor(height, width, angle, count, x, y) {
 			this.height = height;
 			this.width = width;
+			this.angle = angle;
 			this.count = count;
 			this.pos = [x, y];
 
@@ -130,9 +133,22 @@ document.addEventListener('DOMContentLoaded', function() {
 		draw(ctx) {
 			ctx.fillStyle = "white";
 			ctx.lineWidth = 3;
-			this.sieveArr.forEach(function(elem, ix) {
+			if(this.angle)
+			{
+				ctx.translate(this.pos[0] + this.width / 2, this.pos[1] + this.height / 2);
+				ctx.rotate(this.angle * Math.PI / 180);
+			}
+
+			this.sieveArr.forEach(function (elem, ix) {
+				if(this.angle)
+				{
+					this.sieveArr[ix].pos[0] = -this.width / 2;
+					this.sieveArr[ix].pos[1] = -this.height / 2 + (this.count - ix - 1) * this.height / this.count + 10 * ix;
+				}
+
 				elem.draw(ctx);
-			});
+			}, this);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
 		};
 
 		move(translate) {
@@ -322,7 +338,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		objs = {
 			"weight": new weight(270, 240, 90, 180),
 			"shaker": new shaker(360, 180, 0, 570, 20),
-			"sieves": new sieves(210, 90, 6, 660, 170),
+			"sieves": new sieves(210, 90, 0, 6, 660, 170),
 			"lid": new lid(35, 90, 615, 70),
 			"soil": new soil(60, 90, 660, 320),
 		};
@@ -416,7 +432,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				{
 					hover = true;
 					rotation = 1;
-					rotLim = 5;
+					rotLim = 90;
 				}
 
 				else if(step === 9 && val === "sieves")
@@ -577,12 +593,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			document.getElementById("main").style.pointerEvents = 'auto';
 		}
 
-		objs['shaker'].angle += rotation;
-		if(objs['shaker'].angle >= rotLim)
-		{
-			rotation = 0;
-		}
-
+		rotation = rotate(objs, rotation, rotLim);
 		if(translate[0] != 0 || translate[1] != 0)
 		{
 			let temp = step;
