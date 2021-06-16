@@ -19,9 +19,21 @@ document.addEventListener('DOMContentLoaded', function() {
 		objs['soil'].angle += rotation;
 		objs['lid'].angle += rotation;
 
+		if(objs['shaker'].angle === 0 && rotCtr === 10)
+		{
+			rotation = 0;
+			step += 1;
+			objs['sieves'].sieveArr.forEach(function(sieve, ix) {
+				objs['sieves'].sieveArr[ix].pos[0] = objs['sieves'].pos[0];
+				objs['sieves'].sieveArr[ix].pos[1] = objs['sieves'].pos[1] + (objs['sieves'].count - ix - 1) * objs['sieves'].height / objs['sieves'].count + 10 * ix;
+			});
+
+		}
+
 		if(objs['shaker'].angle === rotation * rotLim / math.abs(rotation))
 		{
 			rotation *= -1;
+			rotCtr += 1;
 		}
 
 		return rotation;
@@ -68,8 +80,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			else if(step === enabled.length - 2)
 			{
 				logic(tableData);
-				generateTableHead(table, Object.keys(tableData[0]));
-				generateTable(table, tableData);
+				//generateTableHead(table, Object.keys(tableData[0]));
+				//generateTable(table, tableData);
 
 				document.getElementById("apparatus").style.display = 'none';
 				document.getElementById("observations").style.width = '40%';
@@ -133,17 +145,17 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		};
 
-		draw(ctx) {
+		draw(ctx, rotation) {
 			ctx.fillStyle = "white";
 			ctx.lineWidth = 3;
-			if(this.angle)
+			if(rotation)
 			{
 				ctx.translate(this.pos[0] + this.width / 2, this.pos[1] + this.height / 2);
 				ctx.rotate(this.angle * Math.PI / 180);
 			}
 
 			this.sieveArr.forEach(function (elem, ix) {
-				if(this.angle)
+				if(rotation)
 				{
 					this.sieveArr[ix].pos[0] = -this.width / 2;
 					this.sieveArr[ix].pos[1] = -this.height / 2 + (this.count - ix - 1) * this.height / this.count + 10 * ix;
@@ -173,8 +185,11 @@ document.addEventListener('DOMContentLoaded', function() {
 			{
 				idx += 1;
 				translate[0] = -5;
-				translate[1] = -5;
-				lim[1] = lim[1] - this.height / this.count + 10;
+				if(step === 2)
+				{
+					translate[1] = -5;
+					lim[1] = lim[1] - this.height / this.count + 10;
+				}
 			}
 
 			return idx;
@@ -359,12 +374,13 @@ document.addEventListener('DOMContentLoaded', function() {
 		};
 		keys = [];
 
-		enabled = [["weight"], ["weight", "sieves"], ["weight", "sieves"], ["weight", "sieves", "soil"], ["weight", "sieves", "soil"], ["sieves", "shaker", "soil"], ["sieves", "shaker", "soil"], ["lid", "sieves", "shaker", "soil"], ["lid", "sieves", "shaker", "soil"], ["weight", "sieves", "soil"], ["weight", "sieves", "soil"], []];
+		enabled = [["weight"], ["weight", "sieves"], ["weight", "sieves"], ["weight", "sieves", "soil"], ["weight", "sieves", "soil"], ["sieves", "shaker", "soil"], ["sieves", "shaker", "soil"], ["lid", "sieves", "shaker", "soil"], ["lid", "sieves", "shaker", "soil"], ["weight", "sieves", "soil"], []];
 		step = 0;
 		translate = [0, 0];
 		lim = [-1, -1];
 		rotation = 0;
 		rotLim = -1;
+		rotCtr = 0;
 	};
 
 	function restart() 
@@ -509,12 +525,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		"Click on the sieve set to move it to the shaker.",
 		"Click on 'Lid' in the apparatus menu to add a lid to the sieve set in the shaker.",
 		"Click on the shaker blue portion at the bottom to start the shaker and properly sieve the soil.",
-		"Click on 'Weighing Machine' in the apparatus menu to add a weighing machine to the workspace.", 
 		"Click on the sieves with dry soil to weigh it.",
 		"Click the restart button to perform the experiment again.",
 	];
 
-	let step, translate, lim, rotation, rotLim, objs, keys, enabled, small, idx;
+	let step, translate, lim, rotation, rotLim, objs, keys, enabled, small, idx, rotCtr;
 	init();
 
 	const tableData = [
@@ -599,7 +614,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					ctr += 1;
 				}
 
-				objs[name].draw(ctx);
+				objs[name].draw(ctx, rotation);
 			}
 		});
 
@@ -612,7 +627,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		if(translate[0] != 0 || translate[1] != 0)
 		{
 			let temp = step;
-			const soilMoves = [4, 6], sieveSetMoves = [6], sievesMoves = [2];
+			const soilMoves = [4, 6], sieveSetMoves = [6], sievesMoves = [2, 9];
 
 			if(soilMoves.includes(step))
 			{
@@ -641,6 +656,7 @@ document.addEventListener('DOMContentLoaded', function() {
 					translate[0] = 0;
 					translate[1] = 0;
 					temp += 1;
+					idx = 0;
 				}
 			}
 
