@@ -16,9 +16,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		objs['sieves'].angle += rotation;
 		objs['shaker'].angle += rotation;
-		if(objs['shaker'].angle >= rotLim)
+		objs['soil'].angle += rotation;
+		objs['lid'].angle += rotation;
+
+		if(objs['shaker'].angle === rotation * rotLim / math.abs(rotation))
 		{
-			rotation = 0;
+			rotation *= -1;
 		}
 
 		return rotation;
@@ -179,28 +182,35 @@ document.addEventListener('DOMContentLoaded', function() {
 	};
 
 	class lid {
-		constructor(height, width, x, y) {
+		constructor(height, width, angle, x, y) {
 			this.height = height;
 			this.width = width;
+			this.angle = angle;
 			this.pos = [x, y];
 		};
 
 		draw(ctx) {
 			ctx.fillStyle = "#A9A9A9";
 			ctx.lineWidth = 3;
+			const correction = 1;
+
+			ctx.translate(this.pos[0] + this.width / 2, this.pos[1] + this.height / 2);
+			ctx.rotate(this.angle * Math.PI / 180);
 
 			ctx.beginPath();
-			ctx.rect(this.pos[0], this.pos[1], this.width, this.height);
+			ctx.rect(-this.width / 2 + this.angle * correction, -this.height / 2, this.width, this.height);
 			ctx.closePath();
 			ctx.fill();
 			ctx.stroke();
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
 		};
 	};
 
 	class soil {
-		constructor(height, width, x, y) {
+		constructor(height, width, angle, x, y) {
 			this.height = height;
 			this.width = width;
+			this.angle = angle;
 			this.pos = [x, y];
 			this.img = new Image();
 			this.img.src = './images/uneven-soil.png';
@@ -208,7 +218,12 @@ document.addEventListener('DOMContentLoaded', function() {
 		};
 
 		draw(ctx) {
-			ctx.drawImage(objs['soil'].img, objs['soil'].pos[0], objs['soil'].pos[1], objs['soil'].width, objs['soil'].height);
+			const correction = 0.5;
+
+			ctx.translate(this.pos[0] + this.width / 2, this.pos[1] + this.height / 2);
+			ctx.rotate(this.angle * Math.PI / 180);
+			ctx.drawImage(objs['soil'].img, -objs['soil'].width / 2 + this.angle * correction, -objs['soil'].height / 2, objs['soil'].width, objs['soil'].height);
+			ctx.setTransform(1, 0, 0, 1, 0, 0);
 		};
 
 		shrink(scale) {
@@ -339,8 +354,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			"weight": new weight(270, 240, 90, 180),
 			"shaker": new shaker(360, 180, 0, 570, 20),
 			"sieves": new sieves(210, 90, 0, 6, 660, 170),
-			"lid": new lid(35, 90, 615, 70),
-			"soil": new soil(60, 90, 660, 320),
+			"lid": new lid(35, 90, 0, 615, 70),
+			"soil": new soil(60, 90, 0, 660, 320),
 		};
 		keys = [];
 
@@ -425,14 +440,14 @@ document.addEventListener('DOMContentLoaded', function() {
 				{
 					hover = true;
 					translate[0] = 5;
-					lim[0] = 615;
+					lim[0] = objs['shaker'].pos[0] + objs['shaker'].width / 2 - objs['sieves'].width / 2;
 				}
 
 				else if(step === 8 && val === "shaker" && canvasPos[1] >= objs[val].pos[1] + objs[val].height * 0.85 - errMargin && canvasPos[1] <= objs[val].pos[1] + objs[val].height + errMargin)
 				{
 					hover = true;
 					rotation = 1;
-					rotLim = 90;
+					rotLim = 5;
 				}
 
 				else if(step === 9 && val === "sieves")
@@ -622,7 +637,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				if(idx >= objs['sieves'].count)
 				{
 					objs['sieves'].pos[0] = objs['sieves'].sieveArr[idx - 1].pos[0];
-					objs['sieves'].pos[1] = objs['sieves'].sieveArr[idx - 1].pos[1];
+					objs['sieves'].pos[1] = objs['sieves'].sieveArr[idx - 1].pos[1] - 50;
 					translate[0] = 0;
 					translate[1] = 0;
 					temp += 1;
