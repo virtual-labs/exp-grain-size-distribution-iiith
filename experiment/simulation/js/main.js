@@ -22,7 +22,6 @@ document.addEventListener('DOMContentLoaded', function() {
 		if(objs['shaker'].angle === 0 && rotCtr === 10)
 		{
 			rotation = 0;
-			step += 1;
 			objs['sieves'].sieveArr.forEach(function(sieve, ix) {
 				objs['sieves'].sieveArr[ix].pos[0] = objs['sieves'].pos[0];
 				objs['sieves'].sieveArr[ix].pos[1] = objs['sieves'].pos[1] + (objs['sieves'].count - ix - 1) * objs['sieves'].height / objs['sieves'].count + 10 * ix;
@@ -233,11 +232,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		};
 
 		draw(ctx) {
-			const correction = 0.5;
+			const correction = 35 / math.pow((this.pos[1] - 70), 2);
 
 			ctx.translate(this.pos[0] + this.width / 2, this.pos[1] + this.height / 2);
 			ctx.rotate(this.angle * Math.PI / 180);
-			ctx.drawImage(objs['soil'].img, -objs['soil'].width / 2 + this.angle * correction, -objs['soil'].height / 2, objs['soil'].width, objs['soil'].height);
+			ctx.drawImage(this.img, -this.width / 2 + this.angle * correction, -this.height / 2, this.width, this.height);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 		};
 
@@ -373,8 +372,9 @@ document.addEventListener('DOMContentLoaded', function() {
 			"soil": new soil(60, 90, 0, 660, 320),
 		};
 		keys = [];
+		soils = [];
 
-		enabled = [["weight"], ["weight", "sieves"], ["weight", "sieves"], ["weight", "sieves", "soil"], ["weight", "sieves", "soil"], ["sieves", "shaker", "soil"], ["sieves", "shaker", "soil"], ["lid", "sieves", "shaker", "soil"], ["lid", "sieves", "shaker", "soil"], ["weight", "sieves", "soil"], []];
+		enabled = [["weight"], ["weight", "sieves"], ["weight", "sieves"], ["weight", "sieves", "soil"], ["weight", "sieves", "soil"], ["sieves", "shaker", "soil"], ["sieves", "shaker", "soil"], ["lid", "sieves", "shaker", "soil"], ["lid", "sieves", "shaker", "soil"], ["weight", "sieves"], []];
 		step = 0;
 		translate = [0, 0];
 		lim = [-1, -1];
@@ -464,6 +464,8 @@ document.addEventListener('DOMContentLoaded', function() {
 					hover = true;
 					rotation = 1;
 					rotLim = 5;
+					translate[1] = 1;
+					lim[1] = 245;
 				}
 
 				else if(step === 9 && val === "sieves")
@@ -529,7 +531,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		"Click the restart button to perform the experiment again.",
 	];
 
-	let step, translate, lim, rotation, rotLim, objs, keys, enabled, small, idx, rotCtr;
+	let step, translate, lim, rotation, rotLim, objs, keys, enabled, small, idx, rotCtr, soils;
 	init();
 
 	const tableData = [
@@ -618,6 +620,14 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		});
 
+		if(soils.length)
+		{
+			soils.forEach(function(lvl, ix) {
+				soils[ix].angle += rotation;
+				lvl.draw(ctx, rotation);
+			});
+		}
+
 		if(ctr === enabled[step].length)
 		{
 			document.getElementById("main").style.pointerEvents = 'auto';
@@ -627,16 +637,40 @@ document.addEventListener('DOMContentLoaded', function() {
 		if(translate[0] != 0 || translate[1] != 0)
 		{
 			let temp = step;
-			const soilMoves = [4, 6], sieveSetMoves = [6], sievesMoves = [2, 9];
+			const soilMoves = [4, 6, 8], sieveSetMoves = [6], sievesMoves = [2, 9], soilSetMoves = [9];
 
 			if(soilMoves.includes(step))
 			{
 				updatePos(objs['soil'], translate);
-				if(step === 4)
+				if(step != 6)
 				{
-					objs['soil'].shrink(5);
+					if(step === 4)
+					{
+						objs['soil'].shrink(5);
+					}
+
 					temp = limCheck(objs['soil'], translate, lim, step);
+					const currSieve = objs['sieves'].pos[1] + idx * objs['sieves'].height / objs['sieves'].count + 10 * (objs['sieves'].count - idx - 1) + objs['sieves'].height / objs['sieves'].count;
+					if(step === 8 && objs['soil'].pos[1] + objs['soil'].height >= currSieve)
+					{
+						idx += 1;
+						soils.push(new soil(10, 90, objs['soil'].angle, objs['soil'].pos[0], objs['soil'].pos[1] + objs['soil'].height - 10));
+						objs['soil'].height -= 3;
+
+						if(temp != step)
+						{
+							idx = 0;
+							keys = keys.filter(function(val, index) {
+								return val != "soil" && val != "lid";
+							});
+						}
+					}
 				}
+			}
+
+			else if(soilSetMoves.includes(step))
+			{
+				updatePos(soils[soils.length - 1 - idx], translate);
 			}
 
 			if(sieveSetMoves.includes(step))
