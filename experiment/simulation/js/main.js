@@ -528,7 +528,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		"Click on the sieve set to move it to the shaker.",
 		"Click on 'Lid' in the apparatus menu to add a lid to the sieve set in the shaker.",
 		"Click on the shaker blue portion at the bottom to start the shaker and properly sieve the soil.",
-		"Click on the sieves with dry soil to weigh it.",
+		"Click on the sieve set containing soil at different levels(sieves) to weigh each sieve separately.",
 		"Click the restart button to perform the experiment again.",
 	];
 
