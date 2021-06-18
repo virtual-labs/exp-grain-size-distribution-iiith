@@ -24,7 +24,7 @@
 				"a": "Fine grained soils",
 				"b": "Coarse grained soils",
 				"c": "Silts and clays",
-				"d": "Both a and b",
+				"d": "Both a and b"
 			},
 			"explanations": {
 				"a": "While these soils can be classified using the curves, this is not the completely right answer.",

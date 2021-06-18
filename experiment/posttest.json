@@ -56,11 +56,11 @@
 			"question": "4. A soil having a uniformity coefficient smaller than about 2 is considered ‘uniform’.",
 			"answers": {
 				"a": "True",
-				"b": "False",
+				"b": "False"
 			},
 			"explanations": {
 				"a": "Coefficient of uniformity, D<sub>60</sub> Particle size in mm such that 60% of the soil is finer than this size. D<sub>10</sub> Particle size in mm such that 10% of the soil is finer than this size. For uniformly graded soil, is nearly 1 For a well graded gravel, For a well graded sand, Therefore, the soil having a uniformity coefficient smaller than about 2 is considered uniform. For a well graded gravel, cu >4 For a well graded sand, Cu >6",
-				"b": "",
+				"b": ""
 			},
 			"difficulty": "intermediate",
 			"correctAnswer": "a"
