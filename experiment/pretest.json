@@ -13,7 +13,7 @@
 				"a": "This is the definition of a uniform graded soil, not a well graded soil.",
 				"b": "More fit to be called uniform graded soil instead of well graded in this case.",
 				"c": "",
-				"d": "One of the other options does containe the correct definition of a well graded soil."
+				"d": "One of the other options does contain the correct definition of a well graded soil."
 			},
 			"difficulty": "beginner",
 			"correctAnswer": "c"
@@ -47,7 +47,7 @@
 				"a": "",
 				"b": "",
 				"c": "The coefficient of curvature (Cc) is given by the equation Cc = D30<sup>2</sup> / (D<sub>10</sub> * D<sub>60</sub>).",
-				"d": ""
+				"d": "This is the formula for the coefficient of uniformity, not of curvature."
 			},
 			"difficulty": "intermediate",
 			"correctAnswer": "c"
@@ -58,7 +58,7 @@
 				"a": "D<sub>60</sub> and D<sub>10</sub>",
 				"b": "D<sub>30</sub> and D<sub>10</sub>",
 				"c": "D<sub>10</sub> and D<sub>30</sub>",
-				"d": "D<sub>10</sub> and D<sub>30</sub>"
+				"d": "D<sub>10</sub> and D<sub>60</sub>"
 			},
 			"explanations": {
 				"a": "The coefficient of uniformity CV, is defined as the ratio of D<sub>60</sub> and D<sub>10</sub>, i.e., CV = D<sub>60</sub> / D<sub>10</sub>.",
@@ -81,7 +81,7 @@
 				"a": "",
 				"b": "",
 				"c": "",
-				"d": "If we tabulate the data including the derived values such as the percent passing for each sieve, we find that exactly 60% soil is finer than 600 Mu sieve and !0% for 500 Mu. Using this, we can directly apply the formula D<sub>60</sub> / D<sub>10</sub>."
+				"d": "If we tabulate the data including the derived values such as the percent passing for each sieve, we find that exactly 60% soil is finer than 600 Mu sieve and 10% for 500 Mu. Using this, we can directly apply the formula D<sub>60</sub> / D<sub>10</sub>."
 			},
 			"difficulty": "advanced",
 			"correctAnswer": "d"
