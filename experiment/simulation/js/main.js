@@ -39,16 +39,33 @@ document.addEventListener('DOMContentLoaded', function() {
 	};
 
 	function randomNumber(min, max) {
-		return (Math.random() * (max - min + 1) + min).toFixed(2);
+		return Number((Math.random() * (max - min + 1) + min).toFixed(2));
 	};
 
-	function logic(tableData)
+	function logic(tableData, retainedData)
 	{
-		const soilData = { 'Silt': randomNumber(22.5, 27.5), 'Sand': randomNumber(12, 16), 'Clay': randomNumber(30, 50) };
+		const sum = retainedData.reduce((a, b) => {return a + b;}, 0);
+		retainedData.forEach(function (category, i) {
+			retainedData[i] *= 100 / sum;
+			retainedData[i] = (100 - retainedData[i]);
+			if(i)
+			{
+				retainedData[i] += retainedData[i - 1] - 100;
+			}
+
+			retainedData[i] = retainedData[i].toFixed(2);
+		});
+
+		retainedData[retainedData.length - 1] = 0;
 		tableData.forEach(function(row, index) {
-			const ans = (Number)(soilData[row['Soil Type']]);
-			row['Water Content(%)'] = ans;
-			row['Dry Soil Mass(g)'] = ((100 * wetSoilMass) / (ans + 100)).toFixed(2);
+			row['Percent Passing'] = retainedData[index]
+			row['Soil Retained(g)'] = (100 - retainedData[index]) * soilMass / 100;
+			if(index)
+			{
+				row['Soil Retained(g)'] = (retainedData[index - 1] - retainedData[index]) * soilMass / 100;
+			}
+
+			row['Soil Retained(g)'] = row['Soil Retained(g)'].toFixed(2);
 		});
 	};
 
@@ -66,30 +83,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		if(translate[0] === 0 && translate[1] === 0)
 		{
-			if(step === 2)
-			{
-				document.getElementById("output1").innerHTML = "Mass of sieves = " + String(10) + "g";
-			}
-
-			else if(step === 4)
-			{
-				document.getElementById("output2").innerHTML = "Mass of wet soil = " + String(wetSoilMass) + "g";
-			}
-
-			else if(step === enabled.length - 2)
-			{
-				logic(tableData);
-				//generateTableHead(table, Object.keys(tableData[0]));
-				//generateTable(table, tableData);
-
-				document.getElementById("apparatus").style.display = 'none';
-				document.getElementById("observations").style.width = '40%';
-				if(small)
-				{
-					document.getElementById("observations").style.width = '85%';
-				}
-			}
-
 			return step + 1;
 		}
 
@@ -360,8 +353,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function init()
 	{
-		document.getElementById("output1").innerHTML = "Mass of sieves = ___ g";
-		document.getElementById("output2").innerHTML = "Mass of wet soil = ___ g";
+		document.getElementById("output1").innerHTML = "Mass of soil = ___ g";
 
 		idx = 0;
 		objs = {
@@ -375,6 +367,9 @@ document.addEventListener('DOMContentLoaded', function() {
 		soils = [];
 
 		enabled = [["weight"], ["weight", "sieves"], ["weight", "sieves"], ["weight", "sieves", "soil"], ["weight", "sieves", "soil"], ["sieves", "shaker", "soil"], ["sieves", "shaker", "soil"], ["lid", "sieves", "shaker", "soil"], ["lid", "sieves", "shaker", "soil"], ["weight", "sieves"], []];
+		wellGraded = [randomNumber(6, 8), randomNumber(14, 17), randomNumber(18, 21), randomNumber(18, 23), randomNumber(18, 23), randomNumber(16, 20)];
+		uniformGraded = [randomNumber(1, 4), randomNumber(4, 8), randomNumber(6, 12), randomNumber(10, 16), randomNumber(55, 70), randomNumber(7, 10)];
+
 		step = 0;
 		translate = [0, 0];
 		lim = [-1, -1];
@@ -397,8 +392,14 @@ document.addEventListener('DOMContentLoaded', function() {
 		tmHandle = window.setTimeout(draw, 1000 / fps); 
 	};
 
-	function generateTableHead(table, data) {
+	function generateTableHead(table, data, title) {
 		const thead = table.createTHead();
+		const titleth = document.createElement("th");
+		const titleText = document.createTextNode(title);
+		titleth.appendChild(titleText);
+		titleth.colSpan = data.length;
+		thead.appendChild(titleth);
+
 		const row = thead.insertRow();
 		data.forEach(function(key, ind) {
 			const th = document.createElement("th");
@@ -499,7 +500,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			output.innerHTML = this.value;
 			if(ind === 0)
 			{
-				wetSoilMass = this.value;
+				soilMass = this.value;
 			}
 		};
 	});
@@ -531,14 +532,17 @@ document.addEventListener('DOMContentLoaded', function() {
 		"Click the restart button to perform the experiment again.",
 	];
 
-	let step, translate, lim, rotation, rotLim, objs, keys, enabled, small, idx, rotCtr, soils;
+	let step, translate, lim, rotation, rotLim, objs, keys, enabled, small, idx, rotCtr, soils, wellGraded, uniformGraded;
 	init();
 
-	const tableData = [
-		{ "Soil Type": "Silt", "Dry Soil Mass(g)": "", "Water Content(%)": "" },
-		{ "Soil Type": "Sand", "Dry Soil Mass(g)": "", "Water Content(%)": "" },
-		{ "Soil Type": "Clay", "Dry Soil Mass(g)": "", "Water Content(%)": "" },
-	];
+	const wellGradedTableData = [
+		{ "Sieve Size(mm)": "300", "Sieve Mass(g)": "10", "Soil Retained(g)": "", "Percent Passing": "" },
+		{ "Sieve Size(mm)": "80", "Sieve Mass(g)": "10", "Soil Retained(g)": "", "Percent Passing": "" },
+		{ "Sieve Size(mm)": "40", "Sieve Mass(g)": "10", "Soil Retained(g)": "", "Percent Passing": "" },
+		{ "Sieve Size(mm)": "20", "Sieve Mass(g)": "10", "Soil Retained(g)": "", "Percent Passing": "" },
+		{ "Sieve Size(mm)": "10", "Sieve Mass(g)": "10", "Soil Retained(g)": "", "Percent Passing": "" },
+		{ "Sieve Size(mm)": "4.75", "Sieve Mass(g)": "10", "Soil Retained(g)": "", "Percent Passing": "" }
+	], uniformGradedTableData = [...wellGradedTableData];
 
 	const objNames = Object.keys(objs);
 	objNames.forEach(function(elem, ind) {
@@ -557,7 +561,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	});
 
 	// Input Parameters 
-	let wetSoilMass = 100; 
+	let soilMass = 100; 
 	canvas.addEventListener('mousemove', function(event) {check(event, translate, step, false);});
 	canvas.addEventListener('click', function(event) {check(event, translate, step);});
 
@@ -695,6 +699,31 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 
 			step = temp;
+			if(step === 5)
+			{
+				document.getElementById("output1").innerHTML = "Mass of soil = " + String(soilMass) + "g";
+			}
+
+			else if(step === enabled.length - 1)
+			{
+				keys = [];
+				soils = [];
+
+				logic(wellGradedTableData, wellGraded);
+				generateTableHead(table, Object.keys(wellGradedTableData[0]), "Well Graded Soil");
+				generateTable(table, wellGradedTableData);
+
+				logic(uniformGradedTableData, uniformGraded);
+				generateTableHead(table, Object.keys(uniformGradedTableData[0]), "Uniform Graded Soil");
+				generateTable(table, uniformGradedTableData);
+
+				document.getElementById("apparatus").style.display = 'none';
+				document.getElementById("observations").style.width = '40%';
+				if(small)
+				{
+					document.getElementById("observations").style.width = '85%';
+				}
+			}
 		}
 
 		document.getElementById("procedure-message").innerHTML = msgs[step];

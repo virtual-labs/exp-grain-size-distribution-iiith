@@ -1,18 +1,69 @@
-[
-{"question":"This is a Sample Question 1?",
-"answers":{
-            "a":"answer1",
-            "b":"answer2",
-            "c":"answer3",
-            "d":"answer4"
-          },
-"correctAnswer":"a"},
-{"question":"This is a Sample Question 2?",
-"answers":{
-            "a":"answer1",
-            "b":"answer2",
-            "c":"answer3",
-            "d":"answer4"
-          },
-"correctAnswer":"c"} 
-]
+{
+	"version": 2.0,
+	"questions": [
+		{
+			"question": "1. Uniformity coefficient of soil is",
+			"answers": {
+				"a": "<1",
+				"b": "=1",
+				"c": ">1",
+				"d": "<=1"
+			},
+			"explanations": {
+				"a": "",
+				"b": "",
+				"c": "",
+				"d": ""
+			},
+			"difficulty": "beginner",
+			"correctAnswer": "d"
+		},
+		{
+			"question": "2. Sieve analysis is used when size of particle is ____",
+			"answers": {
+				"a": "> 0.075mm",
+				"b": "< 0.075mm",
+				"c": "4.75mm",
+				"d": "0.01mm "
+			},
+			"explanations": {
+				"a": "",
+				"b": "",
+				"c": "",
+				"d": ""
+			},
+			"difficulty": "beginner",
+			"correctAnswer": "a"
+		},
+		{
+			"question": "3. For coarse grained soil, the particle size D<sub>10</sub> is sometimes called as __________",
+			"answers": {
+				"a": "Effective size and effective diameter",
+				"b": "Uniform diameter",
+				"c": "All of the mentioned",
+				"d": "None of the mentioned"
+			},
+			"explanations": {
+				"a": "The size D<sub>10</sub> is sometimes called as the effective size or effective diameter.",
+				"b": "",
+				"c": "",
+				"d": ""
+			},
+			"difficulty": "intermediate",
+			"correctAnswer": "a"
+		},
+		{
+			"question": "4. A soil having a uniformity coefficient smaller than about 2 is considered ‘uniform’.",
+			"answers": {
+				"a": "True",
+				"b": "False",
+			},
+			"explanations": {
+				"a": "Coefficient of uniformity, D<sub>60</sub> Particle size in mm such that 60% of the soil is finer than this size. D<sub>10</sub> Particle size in mm such that 10% of the soil is finer than this size. For uniformly graded soil, is nearly 1 For a well graded gravel, For a well graded sand, Therefore, the soil having a uniformity coefficient smaller than about 2 is considered uniform. For a well graded gravel, cu >4 For a well graded sand, Cu >6",
+				"b": "",
+			},
+			"difficulty": "intermediate",
+			"correctAnswer": "a"
+		}
+	]
+}
