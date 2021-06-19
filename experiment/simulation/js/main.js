@@ -44,7 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function logic(tableData, retainedData)
 	{
-		const sum = retainedData.reduce((a, b) => {return a + b;}, 0);
+		const sum = retainedData.reduce((a, b) => {return a + b;}, 0), sizes = [];
 		retainedData.forEach(function (category, i) {
 			retainedData[i] *= 100 / sum;
 			retainedData[i] = (100 - retainedData[i]);
@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		retainedData[retainedData.length - 1] = 0;
 		tableData.forEach(function(row, index) {
+			sizes.push(Number(row['Sieve Size(mm)']));
 			row['Percent Passing'] = retainedData[index]
 			row['Soil Retained(g)'] = (100 - retainedData[index]) * soilMass / 100;
 			if(index)
@@ -67,6 +68,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
 			row['Soil Retained(g)'] = row['Soil Retained(g)'].toFixed(2);
 		});
+
+		//console.log(sizes)
+		drawGraph(sizes, retainedData, ['Grain Size', '% finer'], 'plot');
 	};
 
 	function limCheck(obj, translate, lim, step)
@@ -350,6 +354,61 @@ document.addEventListener('DOMContentLoaded', function() {
 			ctx.stroke();
 		};
 	};
+
+	function drawGraph(Xaxis, Yaxis, text, id) {
+		try {
+			// render the plot using plotly
+			let col = [];
+			//Xaxis.forEach(function(val, ind){
+				//col.push("blue");
+				//if(ind === point)
+				//{
+					//col[ind] = "red";
+				//}
+			//});
+
+			const trace1 = {
+				x: Xaxis,
+				y: Yaxis,
+				type: 'scatter',
+				mode: 'lines',
+			};
+
+			const layout = {
+				width: 450,
+				height: 450,
+				xaxis: {
+					title: {
+						text: text[0],
+						font: {
+							family: 'Courier New, monospace',
+							size: 18,
+							color: '#000000'
+						}
+					},
+				},
+				yaxis: {
+					title: {
+						text: text[1],
+						font: {
+							family: 'Courier New, monospace',
+							size: 18,
+							color: '#000000'
+						}
+					}
+				}
+			};
+
+			const config = {responsive: true};
+			const data = [trace1];
+			Plotly.newPlot(id, data, layout, config);
+		}
+
+		catch (err) {
+			console.error(err);
+			alert(err);
+		}
+	}
 
 	function init()
 	{
@@ -701,6 +760,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			step = temp;
 			if(step === 5)
 			{
+				//logic(wellGradedTableData, wellGraded);
 				document.getElementById("output1").innerHTML = "Mass of soil = " + String(soilMass) + "g";
 			}
 
