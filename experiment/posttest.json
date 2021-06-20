@@ -2,7 +2,7 @@
 	"version": 2.0,
 	"questions": [
 		{
-			"question": "1. Uniformity coefficient of soil is",
+			"question": "1. The uniformity coefficient of soil is ____.",
 			"answers": {
 				"a": "<1",
 				"b": "=1",
@@ -19,7 +19,7 @@
 			"correctAnswer": "d"
 		},
 		{
-			"question": "2. Sieve analysis is used when size of particle is ____",
+			"question": "2. Sieve analysis is used when the size of particles is ____.",
 			"answers": {
 				"a": "> 0.075mm",
 				"b": "< 0.075mm",
@@ -27,40 +27,40 @@
 				"d": "0.01mm "
 			},
 			"explanations": {
-				"a": "",
-				"b": "",
-				"c": "",
-				"d": ""
+				"a": "It is possible to design sieves for sizes > 75 micron and this method helps when the particles have varying sizes.",
+				"b": "It is difficult to design sieves for sizes smaller than 75 micron and hence turns out to be ineffective in this case.",
+				"c": "When most/all of the particles have the same size, sieve analysis is ineffective.",
+				"d": "When most/all of the particles have the same size, sieve analysis is ineffective."
 			},
 			"difficulty": "beginner",
 			"correctAnswer": "a"
 		},
 		{
-			"question": "3. For coarse grained soil, the particle size D<sub>10</sub> is sometimes called as __________",
+			"question": "3. For coarse grained soil, the particle size D<sub>10</sub> is sometimes called as ____.",
 			"answers": {
 				"a": "Effective size and effective diameter",
 				"b": "Uniform diameter",
-				"c": "All of the mentioned",
-				"d": "None of the mentioned"
+				"c": "All of the above",
+				"d": "None of the above"
 			},
 			"explanations": {
-				"a": "The size D<sub>10</sub> is sometimes called as the effective size or effective diameter.",
-				"b": "",
-				"c": "",
-				"d": ""
+				"a": "D<sub>10</sub> size is termed as effective particle size as it means that only 10% particles are finer than that size and 90% are coarser.",
+				"b": "This is an incorrect name and is counter intuitive for the definition of D<sub>10</sub>.",
+				"c": "D<sub>10</sub> size isn't called by both of the above names simultaneously, i.e, it is called either one or none, but not both.",
+				"d": "One of the other options contains the correct name for D<sub>10</sub> particle size."
 			},
 			"difficulty": "intermediate",
 			"correctAnswer": "a"
 		},
 		{
-			"question": "4. A soil having a uniformity coefficient smaller than about 2 is considered ‘uniform’.",
+			"question": "4. A soil having a uniformity coefficient smaller than about 2 is considered uniformly graded.",
 			"answers": {
 				"a": "True",
 				"b": "False"
 			},
 			"explanations": {
-				"a": "Coefficient of uniformity, D<sub>60</sub> Particle size in mm such that 60% of the soil is finer than this size. D<sub>10</sub> Particle size in mm such that 10% of the soil is finer than this size. For uniformly graded soil, is nearly 1 For a well graded gravel, For a well graded sand, Therefore, the soil having a uniformity coefficient smaller than about 2 is considered uniform. For a well graded gravel, cu >4 For a well graded sand, Cu >6",
-				"b": ""
+				"a": "The uniformity coefficient (C<sub>u</sub>) value is less than 4 for poorly/uniformly graded soil, more than 4 for well graded gravel and more than 6 for well graded sand. Higher value of C<sub>u</sub> indicates that the soil mass consists of soil particles with different size ranges.",
+				"b": "The uniformity coefficient (C<sub>u</sub>) value is less than 4 for poorly/uniformly graded soil, more than 4 for well graded gravel and more than 6 for well graded sand. Higher value of C<sub>u</sub> indicates that the soil mass consists of soil particles with different size ranges."
 			},
 			"difficulty": "intermediate",
 			"correctAnswer": "a"

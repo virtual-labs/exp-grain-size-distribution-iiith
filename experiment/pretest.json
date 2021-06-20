@@ -2,7 +2,7 @@
 	"version": 2.0,
 	"questions": [
 		{
-			"question": "1. A soil sample may be well graded if it has ____",
+			"question": "1. A soil sample may be well graded if it has ____.",
 			"answers": {
 				"a": "Most number of particles of same size",
 				"b": "Excess of certain particles",
@@ -36,7 +36,7 @@
 			"correctAnswer": "d"
 		},
 		{
-			"question": "3. The shape of the particle size curve, which is represented by the coefficient of curvature (C<sub>c</sub>), is given by ____",
+			"question": "3. The shape of the particle size curve, which is represented by the coefficient of curvature (C<sub>c</sub>), is given by ____.",
 			"answers": {
 				"a": "Cc = D<sub>30</sub><sup>2</sup> / (D<sub>10</sub> * D<sub>40</sub>)",
 				"b": "Cc = D<sub>40</sub><sup>2</sup> / (D<sub>10</sub> * D<sub>30</sub>)",
@@ -53,7 +53,7 @@
 			"correctAnswer": "c"
 		},
 		{
-			"question": "4. The coefficient of uniformity (C<sub>u</sub>) is the ratio of ____",
+			"question": "4. The coefficient of uniformity (C<sub>u</sub>) is the ratio of ____.",
 			"answers": {
 				"a": "D<sub>60</sub> and D<sub>10</sub>",
 				"b": "D<sub>30</sub> and D<sub>10</sub>",
@@ -80,7 +80,7 @@
 			"explanations": {
 				"a": "This answer is probably obtained by applying the wrong formula. The formula is: C<sub>u</sub> = D<sub>60</sub> / D<sub>10</sub>.",
 				"b": "This answer is probably obtained either by applying an incorrect formula or by using incorrect values. The formula is: C<sub>u</sub> = D<sub>60</sub> / D<sub>10</sub>, where D<sub>60</sub> is the particle size for which 60% of the soil is finer and D<sub>10</sub> is the particle size for which 10% of the soil is finer.",
-				"c": "This answer is probably obtained either by using incorrect values. The formula is: C<sub>u</sub> = D<sub>60</sub> / D<sub>10</sub>, where D<sub>60</sub> is the particle size for which 60% of the soil is finer and D<sub>10</sub> is the particle size for which 10% of the soil is finer.",
+				"c": "This answer is probably obtained by using incorrect values. The formula is: C<sub>u</sub> = D<sub>60</sub> / D<sub>10</sub>, where D<sub>60</sub> is the particle size for which 60% of the soil is finer and D<sub>10</sub> is the particle size for which 10% of the soil is finer.",
 				"d": "If we tabulate the data including derived values such as the soil percent finer for each sieve, we find that exactly 60% soil is finer than 600 Mu sieve and exactly 10% for 500 Mu. Using this, we can directly apply the formula: C<sub>u</sub> = D<sub>60</sub> / D<sub>10</sub>."
 			},
 			"difficulty": "advanced",
