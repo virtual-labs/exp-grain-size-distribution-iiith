@@ -2,18 +2,18 @@
 	"version": 2.0,
 	"questions": [
 		{
-			"question": "1. The uniformity coefficient of soil is ____.",
+			"question": "1. The uniformity coefficient (C<sub>u</sub>) of soil is ____.",
 			"answers": {
 				"a": "<1",
 				"b": "=1",
 				"c": ">1",
-				"d": "<=1"
+				"d": ">=1"
 			},
 			"explanations": {
-				"a": "",
-				"b": "",
-				"c": "",
-				"d": ""
+				"a": "This is impossible as when we apply this condition on the formula D<sub>60</sub> / D<sub>10</sub>, it implies that D<sub>60</sub> < D<sub>10</sub>, i.e, 60% of the soil particles are finer for a smaller size than the size for which 10% of the particles are finer which is not possible.",
+				"b": "While this is possible (as D<sub>60</sub> can equal D<sub>10</sub>), it is not the only possibility and does not account for a large number of cases where C<sub>u</sub> is not 1.",
+				"c": "While this is possible (as D<sub>60</sub> can be greater than D<sub>10</sub>), it is not the only possibility and does not account for a specific corner case.", 
+				"d": "This is the right relation as D<sub>60</sub> can be greater than or equal to D<sub>10</sub>."
 			},
 			"difficulty": "beginner",
 			"correctAnswer": "d"
