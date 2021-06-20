@@ -22,11 +22,11 @@ Broadly, sands can also be classified as:
 We can plot the distribution of soil particle sizes as percentage of soil finer vs particle size and obtain the following quantities to help us classify the soil:
 1. Coefficient of curvature:
 > C<sub>c</sub> = D<sub>30</sub><sup>2</sup> / (D<sub>60</sub> * D<sub>10</sub>) <br />
-> where, D<sub>30</sub> is particle size at 30% soil finer, D<sub>60</sub> is particle size at 60% soil finer and D<sub>30</sub> is particle size at 10% soil finer. All these values are obtained from the plot.
+> where, D<sub>30</sub> is particle size for which 30% of the soil is finer, D<sub>60</sub> is particle size for which 60% of the soil is finer and D<sub>10</sub> is particle size for which 10% of the soil is finer. All these values are obtained from the plot.
 2. Uniformity coefficient:
 > C<sub>u</sub> = D<sub>60</sub> / D<sub>10</sub> <br />
 > where, D<sub>60</sub> and D<sub>10</sub> have the same definitions as mentioned above for the coefficient of curvature formula.
 
 Coefficient of curvature (C<sub>c</sub>) should lie between 1 and 3 for well graded gravel and sand. 
 
-Similarly, the uniformity coefficient (C<sub>u</sub>) value should be less than 4 for poorly/uniformly graded soil, more than 4 for well graded gravel and more than 6 for wellgraded sand. Higher value of C<sub>u</sub> indicates that the soil mass consists of soil particles with different size ranges.
+Similarly, the uniformity coefficient (C<sub>u</sub>) value should be less than 4 for poorly/uniformly graded soil, more than 4 for well graded gravel and more than 6 for well graded sand. Higher value of C<sub>u</sub> indicates that the soil mass consists of soil particles with different size ranges.
