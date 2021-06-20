@@ -53,7 +53,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				retainedData[i] += retainedData[i - 1] - 100;
 			}
 
-			retainedData[i] = retainedData[i].toFixed(2);
+			retainedData[i] = Number(retainedData[i].toFixed(2));
 		});
 
 		retainedData[retainedData.length - 1] = 0;
@@ -69,7 +69,6 @@ document.addEventListener('DOMContentLoaded', function() {
 			row['Soil Retained(g)'] = row['Soil Retained(g)'].toFixed(2);
 		});
 
-		//console.log(sizes)
 		drawGraph(sizes, retainedData, ['Grain Size', '% finer'], 'plot');
 	};
 
@@ -355,24 +354,36 @@ document.addEventListener('DOMContentLoaded', function() {
 		};
 	};
 
+	function lineFromPoints(p, q)
+	{
+		const m = (q[1] - p[1]) / (q[0] - p[0]), c = p[1] - m * p[0];
+		const xVals = math.range(p[0], q[0], -0.1).toArray();
+		const yVals = xVals.map(function (x) {
+			return m * x + c;
+		});
+
+		return [xVals, yVals];
+	}
+
 	function drawGraph(Xaxis, Yaxis, text, id) {
 		try {
-			// render the plot using plotly
-			let col = [];
-			//Xaxis.forEach(function(val, ind){
-				//col.push("blue");
-				//if(ind === point)
-				//{
-					//col[ind] = "red";
-				//}
-			//});
+			let traces = [];
 
-			const trace1 = {
-				x: Xaxis,
-				y: Yaxis,
-				type: 'scatter',
-				mode: 'lines',
-			};
+			Xaxis.forEach(function(xcoord, i) {
+				if(i != 0)
+				{
+					let xVals = [], yVals = [];
+					[xVals, yVals] = lineFromPoints([Xaxis[i - 1], Yaxis[i - 1]], [Xaxis[i], Yaxis[i]]);
+					const trace = {
+						x: xVals,
+						y: yVals,
+						type: 'scatter',
+						mode: 'lines',
+					};
+
+					traces.push(trace);
+				}
+			});
 
 			const layout = {
 				width: 450,
@@ -399,8 +410,8 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 			};
 
+			const data = traces;
 			const config = {responsive: true};
-			const data = [trace1];
 			Plotly.newPlot(id, data, layout, config);
 		}
 
@@ -760,7 +771,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			step = temp;
 			if(step === 5)
 			{
-				//logic(wellGradedTableData, wellGraded);
+				logic(wellGradedTableData, wellGraded);
 				document.getElementById("output1").innerHTML = "Mass of soil = " + String(soilMass) + "g";
 			}
 
