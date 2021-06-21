@@ -89,8 +89,8 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		});
 
-		document.getElementById(name + " Cu").innerHTML = name + " Uniformity Coefficient, C<sub>u</sub> = " + String(D60 / D10);
-		document.getElementById(name + " Cc").innerHTML = name + " Coefficient of Curvature, C<sub>c</sub> = " + String((D30 * D30) / (D10 * D60));
+		document.getElementById(name + " Cu").innerHTML = name + " Uniformity Coefficient, C<sub>u</sub> = " + String((D60 / D10).toFixed(2));
+		document.getElementById(name + " Cc").innerHTML = name + " Coefficient of Curvature, C<sub>c</sub> = " + String(((D30 * D30) / (D10 * D60)).toFixed(2));
 		return retTrace
 	};
 
@@ -179,6 +179,12 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 
 				elem.draw(ctx);
+
+				ctx.save();
+				ctx.font = "20px Arial";
+				ctx.fillStyle = "black";
+				ctx.fillText(this.count - ix, elem.pos[0] + elem.width / 2 - 2.5, elem.pos[1] + 30);
+				ctx.restore();
 			}, this);
 			ctx.setTransform(1, 0, 0, 1, 0, 0);
 		};
@@ -415,8 +421,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	function drawGraph(traces, text, id) {
 		try {
 			const layout = {
-				width: 450,
-				height: 450,
+				width: 400,
+				height: 400,
 				xaxis: {
 					title: {
 						text: text[0],
@@ -643,12 +649,12 @@ document.addEventListener('DOMContentLoaded', function() {
 	init();
 
 	const tableData = [
-		{ "Sieve Size(mm)": { "": "300" }, "Well Graded": { "Soil Retained(g)": "", "Percent Finer": "" }, "Uniform Graded": { "Soil Retained(g)": "", "Percent Finer": "" } },
-		{ "Sieve Size(mm)": { "": "80" }, "Well Graded": { "Soil Retained(g)": "", "Percent Finer": "" }, "Uniform Graded": { "Soil Retained(g)": "", "Percent Finer": "" } },
-		{ "Sieve Size(mm)": { "": "40" }, "Well Graded": { "Soil Retained(g)": "", "Percent Finer": "" }, "Uniform Graded": { "Soil Retained(g)": "", "Percent Finer": "" } },
-		{ "Sieve Size(mm)": { "": "20" }, "Well Graded": { "Soil Retained(g)": "", "Percent Finer": "" }, "Uniform Graded": { "Soil Retained(g)": "", "Percent Finer": "" } },
-		{ "Sieve Size(mm)": { "": "10" }, "Well Graded": { "Soil Retained(g)": "", "Percent Finer": "" }, "Uniform Graded": { "Soil Retained(g)": "", "Percent Finer": "" } },
-		{ "Sieve Size(mm)": { "": "4.75" }, "Well Graded": { "Soil Retained(g)": "", "Percent Finer": "" }, "Uniform Graded": { "Soil Retained(g)": "", "Percent Finer": "" } }
+		{ "SNo": { "": "1" }, "Sieve Size(mm)": { "": "300" }, "Well Graded": { "Soil Retained(g)": "", "Percent Finer": "" }, "Uniform Graded": { "Soil Retained(g)": "", "Percent Finer": "" } },
+		{ "SNo": { "": "2" }, "Sieve Size(mm)": { "": "80" }, "Well Graded": { "Soil Retained(g)": "", "Percent Finer": "" }, "Uniform Graded": { "Soil Retained(g)": "", "Percent Finer": "" } },
+		{ "SNo": { "": "3" }, "Sieve Size(mm)": { "": "40" }, "Well Graded": { "Soil Retained(g)": "", "Percent Finer": "" }, "Uniform Graded": { "Soil Retained(g)": "", "Percent Finer": "" } },
+		{ "SNo": { "": "4" }, "Sieve Size(mm)": { "": "20" }, "Well Graded": { "Soil Retained(g)": "", "Percent Finer": "" }, "Uniform Graded": { "Soil Retained(g)": "", "Percent Finer": "" } },
+		{ "SNo": { "": "5" }, "Sieve Size(mm)": { "": "10" }, "Well Graded": { "Soil Retained(g)": "", "Percent Finer": "" }, "Uniform Graded": { "Soil Retained(g)": "", "Percent Finer": "" } },
+		{ "SNo": { "": "6" }, "Sieve Size(mm)": { "": "4.75" }, "Well Graded": { "Soil Retained(g)": "", "Percent Finer": "" }, "Uniform Graded": { "Soil Retained(g)": "", "Percent Finer": "" } }
 	];
 
 	const objNames = Object.keys(objs);
@@ -695,7 +701,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			small = false;
 			if(step === enabled.length - 1)
 			{
-				document.getElementById("observations").style.width = '40%';
+				document.getElementById("observations").style.width = '50%';
 			}
 		}
 	};
@@ -828,11 +834,11 @@ document.addEventListener('DOMContentLoaded', function() {
 				generateTable(table, tableData);
 
 				document.getElementById("main").style.display = 'none';
-				document.getElementById("graph").style.display = 'block';
+				document.getElementById("graph").style.display = 'inline-block';
 				drawGraph([trace1, trace2], ['Grain Size', '% finer'], 'plot');
 
 				document.getElementById("apparatus").style.display = 'none';
-				document.getElementById("observations").style.width = '40%';
+				document.getElementById("observations").style.width = '50%';
 				if(small)
 				{
 					document.getElementById("observations").style.width = '85%';

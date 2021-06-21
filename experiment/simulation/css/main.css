@@ -22,10 +22,10 @@
 
 .graph {
 	display: none;
+	min-width: 100%;
 }
 
 .plot {
-	/*margin-left: 7.5%;*/
 }
 
 .add {
