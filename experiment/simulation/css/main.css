@@ -20,6 +20,14 @@
 	color: black;
 }
 
+.graph {
+	display: none;
+}
+
+.plot {
+	/*margin-left: 7.5%;*/
+}
+
 .add {
 	font-size: 0.90rem; 
 }

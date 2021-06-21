@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		return Number((Math.random() * (max - min + 1) + min).toFixed(2));
 	};
 
-	function logic(tableData, retainedData)
+	function logic(tableData, retainedData, name)
 	{
 		const sum = retainedData.reduce((a, b) => {return a + b;}, 0), sizes = [];
 		retainedData.forEach(function (category, i) {
@@ -58,18 +58,40 @@ document.addEventListener('DOMContentLoaded', function() {
 
 		retainedData[retainedData.length - 1] = 0;
 		tableData.forEach(function(row, index) {
-			sizes.push(Number(row['Sieve Size(mm)']));
-			row['Percent Passing'] = retainedData[index]
-			row['Soil Retained(g)'] = (100 - retainedData[index]) * soilMass / 100;
+			sizes.push(Number(row['Sieve Size(mm)']['']));
+			row[name]['Percent Finer'] = retainedData[index]
+			row[name]['Soil Retained(g)'] = (100 - retainedData[index]) * soilMass / 100;
 			if(index)
 			{
-				row['Soil Retained(g)'] = (retainedData[index - 1] - retainedData[index]) * soilMass / 100;
+				row[name]['Soil Retained(g)'] = (retainedData[index - 1] - retainedData[index]) * soilMass / 100;
 			}
 
-			row['Soil Retained(g)'] = row['Soil Retained(g)'].toFixed(2);
+			row[name]['Soil Retained(g)'] = row[name]['Soil Retained(g)'].toFixed(2);
 		});
 
-		drawGraph(sizes, retainedData, ['Grain Size', '% finer'], 'plot');
+		const retTrace = trace(sizes, retainedData, name), margin = 0.1;
+		let D60, D30, D10;
+
+		retTrace['y'].forEach(function(ycoord, ix) {
+			if(math.abs(ycoord - 60) < margin)
+			{
+				D60 = retTrace['x'][ix];
+			}
+
+			else if(math.abs(ycoord - 30) < margin)
+			{
+				D30 = retTrace['x'][ix];
+			}
+
+			else if(math.abs(ycoord - 10) < margin)
+			{
+				D10 = retTrace['x'][ix];
+			}
+		});
+
+		document.getElementById(name + " Cu").innerHTML = name + " Uniformity Coefficient, C<sub>u</sub> = " + String(D60 / D10);
+		document.getElementById(name + " Cc").innerHTML = name + " Coefficient of Curvature, C<sub>c</sub> = " + String((D30 * D30) / (D10 * D60));
+		return retTrace
 	};
 
 	function limCheck(obj, translate, lim, step)
@@ -357,34 +379,41 @@ document.addEventListener('DOMContentLoaded', function() {
 	function lineFromPoints(p, q)
 	{
 		const m = (q[1] - p[1]) / (q[0] - p[0]), c = p[1] - m * p[0];
-		const xVals = math.range(p[0], q[0], -0.1).toArray();
-		const yVals = xVals.map(function (x) {
-			return m * x + c;
+		const yVals = math.range(p[1], q[1], -0.1).toArray();
+		const xVals = yVals.map(function (y) {
+			return (y - c) / m; 
 		});
 
 		return [xVals, yVals];
-	}
+	};
 
-	function drawGraph(Xaxis, Yaxis, text, id) {
+	function trace(Xaxis, Yaxis, name)
+	{
+		let xVals = [], yVals = [];
+
+		Xaxis.forEach(function(xcoord, i) {
+			if(i != 0)
+			{
+				let xTemp, yTemp;
+				[xTemp, yTemp] = lineFromPoints([Xaxis[i - 1], Yaxis[i - 1]], [Xaxis[i], Yaxis[i]]);
+				xVals = xVals.concat(xTemp);
+				yVals = yVals.concat(yTemp);
+			}
+		});
+
+		const retTrace = {
+			x: xVals,
+			y: yVals,
+			name: name,
+			type: 'scatter',
+			mode: 'lines',
+		};
+
+		return retTrace;
+	};
+
+	function drawGraph(traces, text, id) {
 		try {
-			let traces = [];
-
-			Xaxis.forEach(function(xcoord, i) {
-				if(i != 0)
-				{
-					let xVals = [], yVals = [];
-					[xVals, yVals] = lineFromPoints([Xaxis[i - 1], Yaxis[i - 1]], [Xaxis[i], Yaxis[i]]);
-					const trace = {
-						x: xVals,
-						y: yVals,
-						type: 'scatter',
-						mode: 'lines',
-					};
-
-					traces.push(trace);
-				}
-			});
-
 			const layout = {
 				width: 450,
 				height: 450,
@@ -410,20 +439,20 @@ document.addEventListener('DOMContentLoaded', function() {
 				}
 			};
 
-			const data = traces;
 			const config = {responsive: true};
-			Plotly.newPlot(id, data, layout, config);
+			Plotly.newPlot(id, traces, layout, config);
 		}
 
 		catch (err) {
 			console.error(err);
 			alert(err);
 		}
-	}
+	};
 
 	function init()
 	{
-		document.getElementById("output1").innerHTML = "Mass of soil = ___ g";
+		document.getElementById("output1").innerHTML = "Mass of each sieve = ___ g";
+		document.getElementById("output2").innerHTML = "Mass of soil = ___ g";
 
 		idx = 0;
 		objs = {
@@ -437,7 +466,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		soils = [];
 
 		enabled = [["weight"], ["weight", "sieves"], ["weight", "sieves"], ["weight", "sieves", "soil"], ["weight", "sieves", "soil"], ["sieves", "shaker", "soil"], ["sieves", "shaker", "soil"], ["lid", "sieves", "shaker", "soil"], ["lid", "sieves", "shaker", "soil"], ["weight", "sieves"], []];
-		wellGraded = [randomNumber(6, 8), randomNumber(14, 17), randomNumber(18, 21), randomNumber(18, 23), randomNumber(18, 23), randomNumber(16, 20)];
+		wellGraded = [randomNumber(5, 8), randomNumber(8, 11), randomNumber(14, 16), randomNumber(20, 30), randomNumber(10, 12), randomNumber(15, 19)];
 		uniformGraded = [randomNumber(1, 4), randomNumber(4, 8), randomNumber(6, 12), randomNumber(10, 16), randomNumber(55, 70), randomNumber(7, 10)];
 
 		step = 0;
@@ -452,6 +481,8 @@ document.addEventListener('DOMContentLoaded', function() {
 	{ 
 		window.clearTimeout(tmHandle); 
 
+		document.getElementById("main").style.display = 'block';
+		document.getElementById("graph").style.display = 'none';
 		document.getElementById("inputForm").style.display = 'none';
 		document.getElementById("apparatus").style.display = 'block';
 		document.getElementById("observations").style.width = '';
@@ -462,20 +493,24 @@ document.addEventListener('DOMContentLoaded', function() {
 		tmHandle = window.setTimeout(draw, 1000 / fps); 
 	};
 
-	function generateTableHead(table, data, title) {
+	function generateTableHead(table, data) {
 		const thead = table.createTHead();
-		const titleth = document.createElement("th");
-		const titleText = document.createTextNode(title);
-		titleth.appendChild(titleText);
-		titleth.colSpan = data.length;
-		thead.appendChild(titleth);
 
-		const row = thead.insertRow();
-		data.forEach(function(key, ind) {
+		const mainRow = thead.insertRow();
+		const subRow = thead.insertRow();
+		Object.keys(data[0]).forEach(function(key, ind) {
 			const th = document.createElement("th");
+			th.colSpan = Object.keys(data[0][key]).length;
 			const text = document.createTextNode(key);
 			th.appendChild(text);
-			row.appendChild(th);
+			mainRow.appendChild(th);
+
+			Object.keys(data[0][key]).forEach(function(subHead, ix) {
+				const subth = document.createElement("th");
+				const subtext = document.createTextNode(subHead);
+				subth.appendChild(subtext);
+				subRow.appendChild(subth);
+			});
 		});
 	};
 
@@ -483,9 +518,11 @@ document.addEventListener('DOMContentLoaded', function() {
 		data.forEach(function(rowVals, ind) {
 			const row = table.insertRow();
 			Object.keys(rowVals).forEach(function(key, i) {
-				const cell = row.insertCell();
-				const text = document.createTextNode(rowVals[key]);
-				cell.appendChild(text);
+				Object.keys(rowVals[key]).forEach(function(obj, ix) {
+					const cell = row.insertCell();
+					const text = document.createTextNode(rowVals[key][obj]);
+					cell.appendChild(text);
+				});
 			});
 		});
 	};
@@ -605,14 +642,14 @@ document.addEventListener('DOMContentLoaded', function() {
 	let step, translate, lim, rotation, rotLim, objs, keys, enabled, small, idx, rotCtr, soils, wellGraded, uniformGraded;
 	init();
 
-	const wellGradedTableData = [
-		{ "Sieve Size(mm)": "300", "Sieve Mass(g)": "10", "Soil Retained(g)": "", "Percent Passing": "" },
-		{ "Sieve Size(mm)": "80", "Sieve Mass(g)": "10", "Soil Retained(g)": "", "Percent Passing": "" },
-		{ "Sieve Size(mm)": "40", "Sieve Mass(g)": "10", "Soil Retained(g)": "", "Percent Passing": "" },
-		{ "Sieve Size(mm)": "20", "Sieve Mass(g)": "10", "Soil Retained(g)": "", "Percent Passing": "" },
-		{ "Sieve Size(mm)": "10", "Sieve Mass(g)": "10", "Soil Retained(g)": "", "Percent Passing": "" },
-		{ "Sieve Size(mm)": "4.75", "Sieve Mass(g)": "10", "Soil Retained(g)": "", "Percent Passing": "" }
-	], uniformGradedTableData = [...wellGradedTableData];
+	const tableData = [
+		{ "Sieve Size(mm)": { "": "300" }, "Well Graded": { "Soil Retained(g)": "", "Percent Finer": "" }, "Uniform Graded": { "Soil Retained(g)": "", "Percent Finer": "" } },
+		{ "Sieve Size(mm)": { "": "80" }, "Well Graded": { "Soil Retained(g)": "", "Percent Finer": "" }, "Uniform Graded": { "Soil Retained(g)": "", "Percent Finer": "" } },
+		{ "Sieve Size(mm)": { "": "40" }, "Well Graded": { "Soil Retained(g)": "", "Percent Finer": "" }, "Uniform Graded": { "Soil Retained(g)": "", "Percent Finer": "" } },
+		{ "Sieve Size(mm)": { "": "20" }, "Well Graded": { "Soil Retained(g)": "", "Percent Finer": "" }, "Uniform Graded": { "Soil Retained(g)": "", "Percent Finer": "" } },
+		{ "Sieve Size(mm)": { "": "10" }, "Well Graded": { "Soil Retained(g)": "", "Percent Finer": "" }, "Uniform Graded": { "Soil Retained(g)": "", "Percent Finer": "" } },
+		{ "Sieve Size(mm)": { "": "4.75" }, "Well Graded": { "Soil Retained(g)": "", "Percent Finer": "" }, "Uniform Graded": { "Soil Retained(g)": "", "Percent Finer": "" } }
+	];
 
 	const objNames = Object.keys(objs);
 	objNames.forEach(function(elem, ind) {
@@ -769,24 +806,30 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 
 			step = temp;
-			if(step === 5)
+			if(step === 3)
 			{
-				logic(wellGradedTableData, wellGraded);
-				document.getElementById("output1").innerHTML = "Mass of soil = " + String(soilMass) + "g";
+				document.getElementById("output1").innerHTML = "Mass of each sieve = " + String(10) + "g";
+			}
+
+			else if(step === 5)
+			{
+				document.getElementById("output2").innerHTML = "Mass of soil = " + String(soilMass) + "g";
 			}
 
 			else if(step === enabled.length - 1)
 			{
 				keys = [];
 				soils = [];
+				let trace1, trace2;
 
-				logic(wellGradedTableData, wellGraded);
-				generateTableHead(table, Object.keys(wellGradedTableData[0]), "Well Graded Soil");
-				generateTable(table, wellGradedTableData);
+				trace1 = logic(tableData, wellGraded, 'Well Graded');
+				trace2 = logic(tableData, uniformGraded, 'Uniform Graded');
+				generateTableHead(table, tableData);
+				generateTable(table, tableData);
 
-				logic(uniformGradedTableData, uniformGraded);
-				generateTableHead(table, Object.keys(uniformGradedTableData[0]), "Uniform Graded Soil");
-				generateTable(table, uniformGradedTableData);
+				document.getElementById("main").style.display = 'none';
+				document.getElementById("graph").style.display = 'block';
+				drawGraph([trace1, trace2], ['Grain Size', '% finer'], 'plot');
 
 				document.getElementById("apparatus").style.display = 'none';
 				document.getElementById("observations").style.width = '40%';

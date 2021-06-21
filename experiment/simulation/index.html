@@ -44,6 +44,7 @@
 				<div class="v-datalist-container">
 					<div class="v-datalist-title">Observations</div>
 					<div class="v-datalist-row v-bold" id="output1"></div>
+					<div class="v-datalist-row v-bold" id="output2"></div>
 					<div class="v-datalist-row">
 						<div class="v-table-wrap">
 							<table id="table" class="table is-bordered is-fullwidth">
@@ -55,15 +56,20 @@
 
 			<div class="column has-text-centered is-6-desktop is-10-tablet is-10-mobile simulation">
 				<canvas id="main" class="v-canvas-container"></canvas>
+				<div class="v-datalist-container graph" id='graph'>
+					<div class="v-datalist-title">Graph Observations</div>
+					<div class="plot" id="plot"></div>
+					<div class="v-datalist-row v-bold" id="Well Graded Cu"></div>
+					<div class="v-datalist-row v-bold" id="Well Graded Cc"></div>
+					<div class="v-datalist-row v-bold" id="Uniform Graded Cu"></div>
+					<div class="v-datalist-row v-bold" id="Uniform Graded Cc"></div>
+				</div>
 			</div>
 		</div>
 
 		<div class="columns is-mobile is-centered is-flex">
 			<div class="column has-text-centered">
 				<button id="restart" class="v-button">Restart</button>
-			</div>
-			<div class="column has-text-centered">
-				<div id="plot"></div>
 			</div>
 		</div>
 
