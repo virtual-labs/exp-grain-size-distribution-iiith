@@ -44,6 +44,10 @@
 	order: 3;
 }
 
+.obs-table {
+	margin-top: 5%;
+}
+
 @media screen and (max-width: 1023px) {
 	.apparatus {
 		order: 1;

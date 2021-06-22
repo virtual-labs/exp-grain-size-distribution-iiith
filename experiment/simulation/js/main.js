@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		return Number((Math.random() * (max - min + 1) + min).toFixed(2));
 	};
 
-	function logic(tableData, retainedData, name)
+	function logic(tableData, graphTable, retainedData, name)
 	{
 		const sum = retainedData.reduce((a, b) => {return a + b;}, 0), sizes = [];
 		retainedData.forEach(function (category, i) {
@@ -89,8 +89,16 @@ document.addEventListener('DOMContentLoaded', function() {
 			}
 		});
 
-		document.getElementById(name + " Cu").innerHTML = name + " Uniformity Coefficient, C<sub>u</sub> = " + String((D60 / D10).toFixed(2));
-		document.getElementById(name + " Cc").innerHTML = name + " Coefficient of Curvature, C<sub>c</sub> = " + String(((D30 * D30) / (D10 * D60)).toFixed(2));
+		graphTable[1]['Soil Type'][''] = name;
+		graphTable[1]['Coefficient of Curvature, Cc'][''] = String(((D30 * D30) / (D10 * D60)).toFixed(2));
+		graphTable[1]['Uniformity Coefficient, Cu'][''] = String((D60 / D10).toFixed(2));
+		if(name === "Well Graded")
+		{
+			graphTable[0]['Soil Type'][''] = name;
+			graphTable[0]['Coefficient of Curvature, Cc'][''] = String(((D30 * D30) / (D10 * D60)).toFixed(2));
+			graphTable[0]['Uniformity Coefficient, Cu'][''] = String((D60 / D10).toFixed(2));
+		}
+
 		return retTrace
 	};
 
@@ -494,6 +502,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		document.getElementById("observations").style.width = '';
 
 		table.innerHTML = "";
+		obsTable.innerHTML = "";
 		init();
 
 		tmHandle = window.setTimeout(draw, 1000 / fps); 
@@ -656,6 +665,10 @@ document.addEventListener('DOMContentLoaded', function() {
 		{ "SNo": { "": "5" }, "Sieve Size(mm)": { "": "10" }, "Well Graded": { "Soil Retained(g)": "", "Percent Finer": "" }, "Uniform Graded": { "Soil Retained(g)": "", "Percent Finer": "" } },
 		{ "SNo": { "": "6" }, "Sieve Size(mm)": { "": "4.75" }, "Well Graded": { "Soil Retained(g)": "", "Percent Finer": "" }, "Uniform Graded": { "Soil Retained(g)": "", "Percent Finer": "" } }
 	];
+	const graphTable = [
+		{ "Soil Type": { "": "" }, "Coefficient of Curvature, Cc": { "": "" }, "Uniformity Coefficient, Cu": { "": "" } },
+		{ "Soil Type": { "": "" }, "Coefficient of Curvature, Cc": { "": "" }, "Uniformity Coefficient, Cu": { "": "" } }
+	];
 
 	const objNames = Object.keys(objs);
 	objNames.forEach(function(elem, ind) {
@@ -678,7 +691,7 @@ document.addEventListener('DOMContentLoaded', function() {
 	canvas.addEventListener('mousemove', function(event) {check(event, translate, step, false);});
 	canvas.addEventListener('click', function(event) {check(event, translate, step);});
 
-	const submitButton = document.getElementById("submit"), table = document.getElementsByClassName("table")[0];
+	const submitButton = document.getElementById("submit"), table = document.getElementsByClassName("table")[0], obsTable = document.getElementsByClassName("table")[1];
 	submitButton.addEventListener('click', function(event) {
 		document.getElementById("inputForm").style.display = 'none';
 		enabled[step].push("soil");
@@ -828,10 +841,12 @@ document.addEventListener('DOMContentLoaded', function() {
 				soils = [];
 				let trace1, trace2;
 
-				trace1 = logic(tableData, wellGraded, 'Well Graded');
-				trace2 = logic(tableData, uniformGraded, 'Uniform Graded');
+				trace1 = logic(tableData, graphTable, wellGraded, 'Well Graded');
+				trace2 = logic(tableData, graphTable, uniformGraded, 'Uniform Graded');
 				generateTableHead(table, tableData);
 				generateTable(table, tableData);
+				generateTableHead(obsTable, graphTable);
+				generateTable(obsTable, graphTable);
 
 				document.getElementById("main").style.display = 'none';
 				document.getElementById("graph").style.display = 'inline-block';
