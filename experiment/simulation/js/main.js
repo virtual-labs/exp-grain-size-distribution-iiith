@@ -314,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
 				const y = startY + ((n + 1) * zigzagSpacing);
 				var x = startX;
 
-				if (n % 2 == 0) { // if n is even...
+				if (n % 2 === 0) { // if n is even...
 					x += zigzagHeight;
 				}
 				ctx.lineTo(x, y);
