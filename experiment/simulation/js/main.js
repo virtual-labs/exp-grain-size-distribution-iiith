@@ -212,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			updatePos(this.sieveArr[idx], translate);
 			const temp = limCheck(this.sieveArr[idx], translate, lim, step);
 
-			if(temp != step)
+			if(temp !== step)
 			{
 				idx += 1;
 				translate[0] = -5;
@@ -406,7 +406,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		let xVals = [], yVals = [];
 
 		Xaxis.forEach(function(xcoord, i) {
-			if(i != 0)
+			if(i !== 0)
 			{
 				let xTemp, yTemp;
 				[xTemp, yTemp] = lineFromPoints([Xaxis[i - 1], Yaxis[i - 1]], [Xaxis[i], Yaxis[i]]);
@@ -544,7 +544,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	function check(event, translate, step, flag=true)
 	{ 
-		if(translate[0] != 0 || translate[1] != 0)
+		if(translate[0] !== 0 || translate[1] !== 0)
 		{
 			return;
 		}
@@ -764,7 +764,7 @@ document.addEventListener('DOMContentLoaded', function() {
 		}
 
 		rotation = rotate(objs, rotation, rotLim);
-		if(translate[0] != 0 || translate[1] != 0)
+		if(translate[0] !== 0 || translate[1] !== 0)
 		{
 			let temp = step;
 			const soilMoves = [4, 6, 8], sieveSetMoves = [6], sievesMoves = [2, 9], soilSetMoves = [9];
@@ -772,7 +772,7 @@ document.addEventListener('DOMContentLoaded', function() {
 			if(soilMoves.includes(step))
 			{
 				updatePos(objs['soil'], translate);
-				if(step != 6)
+				if(step !== 6)
 				{
 					if(step === 4)
 					{
@@ -787,11 +787,11 @@ document.addEventListener('DOMContentLoaded', function() {
 						soils.push(new soil(10, 90, objs['soil'].angle, objs['soil'].pos[0], objs['soil'].pos[1] + objs['soil'].height - 10));
 						objs['soil'].height -= 3;
 
-						if(temp != step)
+						if(temp !== step)
 						{
 							idx = 0;
 							keys = keys.filter(function(val, index) {
-								return val != "soil" && val != "lid";
+								return val !== "soil" && val !== "lid";
 							});
 						}
 					}
