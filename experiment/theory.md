@@ -20,11 +20,9 @@ Broadly, sands can also be classified as:
 2. Well graded - The soil contains almost equally distributed percentage of each size of particles.
 
 We can plot the distribution of soil particle sizes as percentage of soil finer vs particle size and obtain the following quantities to help us classify the soil:
-1. Coefficient of curvature:
-> C<sub>c</sub> = D<sub>30</sub><sup>2</sup> / (D<sub>60</sub> * D<sub>10</sub>) <br />
+1. Coefficient of curvature: C<sub>c</sub> = D<sub>30</sub><sup>2</sup> / (D<sub>60</sub> * D<sub>10</sub>) <br />
 > where, D<sub>30</sub> is particle size for which 30% of the soil is finer, D<sub>60</sub> is particle size for which 60% of the soil is finer and D<sub>10</sub> is particle size for which 10% of the soil is finer. All these values are obtained from the plot.
-2. Uniformity coefficient:
-> C<sub>u</sub> = D<sub>60</sub> / D<sub>10</sub> <br />
+2. Uniformity coefficient: C<sub>u</sub> = D<sub>60</sub> / D<sub>10</sub> <br />
 > where, D<sub>60</sub> and D<sub>10</sub> have the same definitions as mentioned above for the coefficient of curvature formula.
 
 Coefficient of curvature (C<sub>c</sub>) should lie between 1 and 3 for well graded gravel and sand. 

@@ -393,9 +393,9 @@ document.addEventListener('DOMContentLoaded', function() {
 	function lineFromPoints(p, q)
 	{
 		const m = (q[1] - p[1]) / (q[0] - p[0]), c = p[1] - m * p[0];
-		const yVals = math.range(p[1], q[1], -0.1).toArray();
-		const xVals = yVals.map(function (y) {
-			return (y - c) / m; 
+		const xVals = math.range(p[0], q[0], -0.001).toArray();
+		const yVals = xVals.map(function (x) {
+			return m * x + c;
 		});
 
 		return [xVals, yVals];
@@ -406,13 +406,18 @@ document.addEventListener('DOMContentLoaded', function() {
 		let xVals = [], yVals = [];
 
 		Xaxis.forEach(function(xcoord, i) {
-			if(i !== 0)
+			let xTemp, yTemp;
+			if(i !== Xaxis.length - 1)
 			{
-				let xTemp, yTemp;
-				[xTemp, yTemp] = lineFromPoints([Xaxis[i - 1], Yaxis[i - 1]], [Xaxis[i], Yaxis[i]]);
-				xVals = xVals.concat(xTemp);
-				yVals = yVals.concat(yTemp);
+				[xTemp, yTemp] = lineFromPoints([Xaxis[i], Yaxis[i]], [Xaxis[i + 1], Yaxis[i + 1]]);
 			}
+
+			else
+			{
+				[xTemp, yTemp] = lineFromPoints([Xaxis[i], Yaxis[i]], [0, 0]);
+			}
+			xVals = xVals.concat(xTemp);
+			yVals = yVals.concat(yTemp);
 		});
 
 		const retTrace = {
@@ -440,6 +445,9 @@ document.addEventListener('DOMContentLoaded', function() {
 							color: '#000000'
 						}
 					},
+					type: 'log',
+					range: [-3, 2],
+					dtick: 1
 				},
 				yaxis: {
 					title: {
@@ -449,7 +457,9 @@ document.addEventListener('DOMContentLoaded', function() {
 							size: 18,
 							color: '#000000'
 						}
-					}
+					},
+					range: [0, 100],
+					dtick: 20
 				}
 			};
 
