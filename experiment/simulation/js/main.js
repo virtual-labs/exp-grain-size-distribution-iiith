@@ -446,7 +446,7 @@ document.addEventListener('DOMContentLoaded', function() {
 						}
 					},
 					type: 'log',
-					range: [-3, 2],
+					range: [0, 2],
 					dtick: 1
 				},
 				yaxis: {
