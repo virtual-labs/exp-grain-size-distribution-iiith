@@ -1,3 +1,3 @@
-1. Jillavenkatesa A, Dapkunas S J, Lin-Sien Lum, Particle Size Characterization, NIST Special Publication 960-1, 2001
-2. Sivakugan N, Soil Classification, James Cook University Geoengineering lecture handout, 2000
-
+- IS : 2720 (Part II) – 1973, Method of Test for soil : Part II
+- Soil Mechanics and Foundations 3rd Edition, Muniram Budhu.
+- Soil Mechanics Laboratory Manual, Braja M. Das
