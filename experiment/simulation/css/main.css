@@ -25,6 +25,10 @@
 	min-width: 100%;
 }
 
+.plot {
+	display: inline-block;
+}
+
 .add {
 	font-size: 0.90rem; 
 }
