@@ -10,7 +10,7 @@ The following particle classification names are given depending on the size of t
 	2. Fine Gravel: 4.75mm to 20mm.
 4. SAND (S): Particle size in range of 0.075mm to 4.75mm.
 	1. Coarse sand: 2.0mm to 4.75mm
-	2. Medium Sand: 0.075mm to 0.425mm.
+	2. Medium Sand: 0.425mm to 2mm
 	3. Fine Sand: 0.075mm to o.425mm.
 
 Name of the soil is given depending on the maximum percentage of the above components.
