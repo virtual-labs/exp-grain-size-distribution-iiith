@@ -1,0 +1,19 @@
+1. Add a weighing machine and a set of sieves from the apparatus menu and weigh each sieve separately by clicking on the sieve set. The weights will be available at the end of the experiment in the observations tables. Each sieve is weighed to account for its weight in future measurements of other components added to it.
+
+2. Add a soil sample from the apparatus menu by clicking the submit button after setting the soil sample mass to an appropriate value.
+
+3. Add the sample to the sieves by clicking on it. However, the soil won't be properly sieved on its own and requires some external force which will be provided by a shaker in the coming steps.
+
+4. Add a shaker from the apparatus menu and move the sieve set with soil to the shaker to properly sieve the soil.
+
+5. Start the shaker by clicking on it. The vibrations separate the soil particles according to their sizes.
+
+6. Move each sieve to the weighing machine separately by clicking on the sieve set. This provides the combined mass of each sieve and the soil retained on it. We can easily obtain the weight of the soil alone by simply subtracting the weight of the sieve as is visible from the values in the observations tables.
+
+7. Check the observation tables. The tables present the observations (including the % of soil finer than each sieve size) for different types of soil where the first table pertains to well graded soil while the second table pertains to uniform graded soil. Note that each run of the experiment even for the same value of soil mass may produce slightly varied outputs. This is done to account for the error margin and generally an experiment is repeated several times and the values are averaged out in the real world.
+
+8. Also check the graphs and the corresponding observations. We plot the graph of percent of soil finer vs grain size for both grades of soil for comparison. We also use the graphs to derive the D<sub>60</sub>, D<sub>30</sub> and D<sub>10</sub> values to compute the uniformity coefficient and the coefficient of curvature for both.
+
+9. Repeat the experiment for different values of the soil sample mass.
+
+**Note:** The user does **not** need to enter any values in the Observation column. The observations and calculations are generated automatically during the simulation.
