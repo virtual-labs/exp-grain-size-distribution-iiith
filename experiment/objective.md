@@ -1,3 +1,5 @@
- To determine the percentage of various size particles in a soil sample, and to classify the coarse grained soil. 
+The objectives of this experiment are to:
 
-{Read More](docs/Exp-4 GrainSizeDistribution.pdf)
+- Determine the percentage of soil particles of different sizes in a soil sample.
+- Understand the procedure for grain size analysis and the determination of particle size distribution.
+- Learn the use of grain size distribution curves and their importance in soil classification.

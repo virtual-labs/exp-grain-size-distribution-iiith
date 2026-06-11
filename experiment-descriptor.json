@@ -2,9 +2,17 @@
   "unit-type": "lu",
   "label": "",
   "basedir": ".",
+  "LaTeXinMD": "true",
   "units": [
     {
       "unit-type": "aim"
+    },
+    {
+      "target": "objective.html",
+      "source": "objective.md",
+      "label": "Objective",
+      "unit-type": "task",
+      "content-type": "text"
     },
     {
       "target": "theory.html",
@@ -50,4 +58,3 @@
     }
   ]
 }
-
